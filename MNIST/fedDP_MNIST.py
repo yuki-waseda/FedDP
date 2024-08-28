@@ -158,7 +158,9 @@ class server():
         self.p_budget = p_budget
         self.epsilon = epsilon
         self.testLoader = torch.utils.data.DataLoader(mnist_testset, batch_size=32)
-        self.device = torch.device("cuda:0""cuda:0" if torch.cuda.is_available() else "cpu")
+        #修正
+        #self.device = torch.device("cuda:0""cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.orders = ([1.25, 1.5, 1.75, 2., 2.25, 2.5, 3., 3.5, 4., 4.5] +
                 list(range(5, 64)) + [128, 256, 512])
 
