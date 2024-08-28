@@ -287,7 +287,9 @@ class server():
 transform = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5, ), (0.5,))])
 mnist_trainset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
 mnist_testset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
-device =  torch.device("cuda:0""cuda:0" if torch.cuda.is_available() else "cpu")
+#修正
+#device =  torch.device("cuda:0""cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 num_clients = 100
 train_len = len(mnist_trainset)
 test_len = len(mnist_testset)
