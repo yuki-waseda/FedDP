@@ -236,13 +236,12 @@ class server():
             noise = noise1
             suma = suma.cpu().numpy()
             suma = suma*prom
-            print(suma)
             noise = noise*prom
             suma = suma + noise
             suma = torch.from_numpy(suma)
             suma = wt + suma.float()
             new_dict[key] = suma
-            
+        print(suma)    
         return new_dict
 
 
