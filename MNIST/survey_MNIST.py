@@ -186,7 +186,7 @@ class server():
             total += equals.size(0)
             suma = suma + equals.sum().item()
         else:      
-            #print('Accuracy: ',suma/float(total))
+            print('')
 
 
 
@@ -199,7 +199,6 @@ class server():
     #state_dicst: Dict with the current model weights 
 
     # This functions apply noise to the given deltas. 
-
     def sanitaze(self,mt, deltas, norms, sigma, state_dict):    
         new_dict = {}
         for key, value in state_dict.items():
