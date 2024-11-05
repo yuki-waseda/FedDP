@@ -237,7 +237,7 @@ class server():
             suma = suma.cpu().numpy()
             suma = suma*prom
             print(suma)
-	    noise = noise*prom
+            noise = noise*prom
             suma = suma + noise
             suma = torch.from_numpy(suma)
             suma = wt + suma.float()
