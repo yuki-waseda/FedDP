@@ -241,7 +241,6 @@ class server():
             suma = torch.from_numpy(suma)
             suma = wt + suma.float()
             new_dict[key] = suma
-        print(suma)    
         return new_dict
 
 
@@ -270,6 +269,7 @@ class server():
             new_state_dict = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict())
             self.model.load_state_dict(new_state_dict)
             i+=1
+            print(self.model)
         return self.model
             
 #             images, labels = next(iter(valloader))
