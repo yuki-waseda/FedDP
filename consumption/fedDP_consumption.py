@@ -27,7 +27,7 @@ warnings.filterwarnings('ignore')
 import matplotlib.pyplot as plt
 #%%
 
-df = pd.read_csv('/mnt/mp_nas_mks/yuki_data/processed_household_power_consumption.csv')
+df = pd.read_csv('/mnt/mp_nas_mks/yuki_data_copy/processed_household_power_consumption.csv')
 df = df.replace({True: 1, False: 0})
 
 #df_train = df[df.years == 2006].sample(frac = 0.8).append(df[df.years == 2007].sample(frac = 0.8)).append(
