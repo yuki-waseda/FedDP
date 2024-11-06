@@ -161,7 +161,7 @@ class server():
     def __init__(self, number_clients, p_budget, epsilon):
         #sigmat = 1.12
         self.model = t_model()
-        sigmat = 0.6 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
+        sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         print(sigmat)
         self.sigmat = sigmat   
         self.n_clients = number_clients
