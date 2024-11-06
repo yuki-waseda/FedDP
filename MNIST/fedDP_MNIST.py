@@ -271,7 +271,6 @@ class server():
             
             if self.p_budget < delta_spent:
                 break
-            
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
             norms = []
@@ -323,6 +322,7 @@ model = serv.server_exec(30)
 images, labels = next(iter(valloader))
 img = images[0].view(1, 784)
 # Turn off gradients to speed up this part
+img = img.to(device)
 with torch.no_grad():
     logps = model(img)
 
