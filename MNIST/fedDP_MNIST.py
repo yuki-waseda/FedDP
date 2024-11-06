@@ -317,7 +317,7 @@ with torch.no_grad():
 
 # Output of the network are log-probabilities, need to take exponential for probabilities
 ps = torch.exp(logps)
-probab = list(ps.numpy()[0])
+probab = list(ps.cpu().numpy()[0])
 print("Predicted Digit =", probab.index(max(probab)))
 view_classify(img.view(1, 28, 28), ps)
 #%%
