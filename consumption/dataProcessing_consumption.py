@@ -23,8 +23,8 @@ from matplotlib import pyplot as plt
 import datetime
 
 
-data = pd.read_csv('household_power_consumption.csv', delimiter=',')
-data.Date = pd.to_datetime(data.Date)
+data = pd.read_csv('household_power_consumption.csv', delimiter=',', low_memory=False)
+data.Date = pd.to_datetime(data.Date, dayfirst=True)
 data.Time = pd.to_timedelta(data.Time)
 data['DateTime']  = data.Date + data.Time
 data = data[['DateTime', 'Global_active_power', 'Global_reactive_power',
@@ -117,5 +117,3 @@ target = data.Global_active_power
 
 total =  pd.concat([features, data.Global_active_power], axis = 1)
 total.to_csv('processed_household_power_consumption.csv',index = False)
-
-
