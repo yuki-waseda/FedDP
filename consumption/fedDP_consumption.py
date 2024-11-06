@@ -159,6 +159,7 @@ class server():
         self.model.eval()
         test_loss = 0
         for data, target in self.testLoader:
+            data, target = data.to(self.device), target.to(self.device)  # データもデバイスに移動
             output = self.model(data)
             test_loss += F.mse_loss(output.view(-1), target, reduction='sum').item()
             predection = output.data.max(1, keepdim=True)[1]
