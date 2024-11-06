@@ -30,9 +30,16 @@ import matplotlib.pyplot as plt
 df = pd.read_csv('/mnt/mp_nas_mks/yuki_data/processed_household_power_consumption.csv')
 
 
-df_train = df[df.years == 2006].sample(frac = 0.8).append(df[df.years == 2007].sample(frac = 0.8)).append(
-    df[df.years == 2008].sample(frac = 0.8)).append(df[df.years == 2009].sample(frac = 0.8)).append(df[df.years == 2010].sample(frac = 0.8))
-
+#df_train = df[df.years == 2006].sample(frac = 0.8).append(df[df.years == 2007].sample(frac = 0.8)).append(
+#    df[df.years == 2008].sample(frac = 0.8)).append(df[df.years == 2009].sample(frac = 0.8)).append(df[df.years == 2010].sample(frac = 0.8))
+# 修正後
+df_train = pd.concat([
+    df[df.years == 2006].sample(frac=0.8),
+    df[df.years == 2007].sample(frac=0.8),
+    df[df.years == 2008].sample(frac=0.8),
+    df[df.years == 2009].sample(frac=0.8),
+    df[df.years == 2010].sample(frac=0.8)
+], ignore_index=True)
 
 df_test = pd.concat([df,df_train]).drop_duplicates(keep=False)
 
@@ -209,7 +216,7 @@ class server():
                 p = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
                 samples2 = list(metropolis_sampler(p, u))
                 noise1 = np.array(samples2)
-                
+
             noise = noise1
 
             suma = suma.cpu().numpy()
