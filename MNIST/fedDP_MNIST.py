@@ -156,11 +156,10 @@ def noiseGen(mu, sigma, suma):
 #@title
 #サーバークラス
 class server():
-    def __init__(self, number_clients, p_budget, epsilon):
+    def __init__(self, number_clients, p_budget, epsilon, sigmat = 1.12):
        
         self.model = t_model()
-        #, sigmat = 1.12
-        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon +1.12
+        #sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon +1.12
         self.sigmat = sigmat   
         self.n_clients = number_clients
         self.samples = get_samples(self.n_clients)
