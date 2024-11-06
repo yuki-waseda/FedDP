@@ -103,8 +103,9 @@ class client():
 
 #画像とクラス確率の出力
 def view_classify(img, ps):
-    ps = ps.data.numpy().squeeze()
-
+    ## 修正
+    ##ps = ps.data.numpy().squeeze()    
+    ps = ps.cpu().data.numpy().squeeze() 
     fig, (ax1, ax2) = plt.subplots(figsize=(6,9), ncols=2)
     ax1.imshow(img.resize_(1, 28, 28).numpy().squeeze())
     ax1.axis('off')
