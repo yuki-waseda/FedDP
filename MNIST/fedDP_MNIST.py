@@ -264,7 +264,6 @@ class server():
 #             clear_output()
             print('Comunication round: ', i)
             self.eval_acc()         
-            print(self.sigmat)
             rdp = compute_rdp(float(mt/len(self.clients)), self.sigmat, i, self.orders)
             _,delta_spent, opt_order = get_privacy_spent(self.orders, rdp, target_eps=self.epsilon)
             print('Delta spent: ', delta_spent)
