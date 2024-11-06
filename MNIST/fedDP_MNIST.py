@@ -161,8 +161,8 @@ class server():
     def __init__(self, number_clients, p_budget, epsilon):
         #sigmat = 1.12
         self.model = t_model()
-        sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
-        print(sigmat)
+        #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
+        sigmat = 1.12 + np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         self.sigmat = sigmat   
         self.n_clients = number_clients
         self.samples = get_samples(self.n_clients)
@@ -315,7 +315,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 #%%
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
-serv = server(num_clients, 0.001, 8)
+serv = server(num_clients, 0.001, 1)
 model = serv.server_exec(30)
 
 #%%
