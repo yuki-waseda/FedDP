@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 import random
 #%%
 
+#モデルの定義
 class t_model(nn.Module):
     def __init__(self):
         super(t_model, self).__init__()
@@ -37,6 +38,7 @@ class t_model(nn.Module):
         x = F.relu(self.fc3(x))
         return F.log_softmax(x)
     
+#クライアントごとのデータサンプリング
 #Return the samples that each client is going to have as a private training data set. This is a not overlapping set
 def get_samples(num_clients):
     tam = len(mnist_trainset)
@@ -56,6 +58,7 @@ def get_samples(num_clients):
 
 #%%
 
+#クライアントクラスの定義
 class client():
     def __init__(self, number, loader, state_dict, batch_size = 32, epochs=10, lr=0.001):
         self.number = number
@@ -98,6 +101,7 @@ class client():
         return wt1, S
 #%%
 
+#画像とクラス確率の出力
 def view_classify(img, ps):
     ps = ps.data.numpy().squeeze()
 
@@ -112,9 +116,11 @@ def view_classify(img, ps):
     ax2.set_xlim(0, 1.1)
     plt.tight_layout()
     
+#後述
 def uniform_proposal(x, delta=2.0):
     return np.random.uniform(x - delta, x + delta)
 
+#後述
 def metropolis_sampler(p, nsamples, proposal=uniform_proposal):
     x = 1 # start somewhere
 
@@ -127,6 +133,7 @@ def metropolis_sampler(p, nsamples, proposal=uniform_proposal):
             x = trial
         yield x
 
+#ガウスノイズ生成
 def noiseGen(mu, sigma, suma):
     mu = mu
     sigma = sigma
@@ -147,9 +154,13 @@ def noiseGen(mu, sigma, suma):
 #%%
 
 #@title
+#サーバークラス
 class server():
-    def __init__(self, number_clients, p_budget, epsilon, sigmat = 1.12):
+    def __init__(self, number_clients, p_budget, epsilon):
+       
         self.model = t_model()
+        #, sigmat = 1.12
+        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon +1.12
         self.sigmat = sigmat   
         self.n_clients = number_clients
         self.samples = get_samples(self.n_clients)
@@ -166,7 +177,7 @@ class server():
         self.orders = ([1.25, 1.5, 1.75, 2., 2.25, 2.5, 3., 3.5, 4., 4.5] +
                 list(range(5, 64)) + [128, 256, 512])
 
-
+    #テストデータに対する精度
     #Evaluates the accuracy of the current model with the test data.  
     def eval_acc(self):
         self.model.to(self.device)
@@ -199,7 +210,7 @@ class server():
     #state_dicst: Dict with the current model weights 
 
     # This functions apply noise to the given deltas. 
-
+    #差分プライバシー適用
     def sanitaze(self,mt, deltas, norms, sigma, state_dict):    
         new_dict = {}
         for key, value in state_dict.items():
@@ -247,7 +258,7 @@ class server():
             
         return new_dict
 
-
+    #学習ラウンドの繰り返し
     def server_exec(self,mt):    
         i=1
         while(True):
@@ -287,7 +298,8 @@ class server():
 #             print("Predicted Digit =", probab.index(max(probab)))
 #             view_classify(img.view(1, 28, 28), ps)
 #%%
-
+#学習開始
+#データセット読み込み・サーバーインスタンス作成
 transform = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5, ), (0.5,))])
 mnist_trainset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
 mnist_testset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
@@ -300,15 +312,15 @@ test_len = len(mnist_testset)
 valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=True)
 
 #%%
-
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
+# デルタバジェットBとプライバシー予算εを指定
 serv = server(num_clients, 0.001, 8)
 model = serv.server_exec(30)
 
 #%%
 
 ###### Testing ########################
-
+# 標準正規分布のヒストグラム
 images, labels = next(iter(valloader))
 img = images[0].view(1, 784)
 # Turn off gradients to speed up this part
@@ -323,7 +335,7 @@ view_classify(img.view(1, 28, 28), ps)
 #%%
 
 ############### Distribution ##############################
-
+#カスタム分布のヒストグラム
 import matplotlib.pyplot as plt
 
 mu, sigma = 0, 0.1
