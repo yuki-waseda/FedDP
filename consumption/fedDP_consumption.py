@@ -27,9 +27,12 @@ warnings.filterwarnings('ignore')
 import matplotlib.pyplot as plt
 #%%
 
-df = pd.read_csv('/mnt/mp_nas_mks/yuki_data/processed_household_power_consumption.csv')
-df = df.replace({True: 1, False: 0})
-df = df.apply(pd.to_numeric, errors='coerce').fillna(0)
+df = pd.read_csv('/mnt/mp_nas_mks/yuki_data/processed_household_power_consumption_new_hour.csv')
+
+df = df[['Global_reactive_power', 'Voltage', 'Global_intensity',
+       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3', 'Sub_metering_4',
+       'Global_active_power', 'years']]
+
 #df_train = df[df.years == 2006].sample(frac = 0.8).append(df[df.years == 2007].sample(frac = 0.8)).append(
 #    df[df.years == 2008].sample(frac = 0.8)).append(df[df.years == 2009].sample(frac = 0.8)).append(df[df.years == 2010].sample(frac = 0.8))
 # 修正後
@@ -40,6 +43,12 @@ df_train = pd.concat([
     df[df.years == 2009].sample(frac=0.8),
     df[df.years == 2010].sample(frac=0.8)
 ], ignore_index=True)
+df_train = df_train[['Global_reactive_power', 'Voltage', 'Global_intensity',
+       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3', 'Sub_metering_4',
+       'Global_active_power']]
+df = df[['Global_reactive_power', 'Voltage', 'Global_intensity',
+       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3', 'Sub_metering_4',
+       'Global_active_power']]
 
 df_test = pd.concat([df,df_train]).drop_duplicates(keep=False)
 
