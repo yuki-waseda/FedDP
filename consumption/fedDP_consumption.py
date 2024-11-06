@@ -274,7 +274,7 @@ class client():
         self.criterion = nn.NLLLoss()
         self.optimizer = optim.SGD(self.model.parameters(), lr=lr)
         self.epochs = epochs
-        self.device =  torch.device("cuda:0""cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.dataLoader = loader                                       
                                            
     def update(self, state_dict):
