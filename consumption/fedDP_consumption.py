@@ -42,9 +42,8 @@ df_train = pd.concat([
 ], ignore_index=True)
 
 df_test = pd.concat([df,df_train]).drop_duplicates(keep=False)
-
-x_train = df_train[df_train.columns[:-1]].copy().values
 y_train = df_train[df_train.columns[-1:]].copy().values
+x_train = df_train[df_train.columns[:-1]].copy().values
 
 x_test = df_test[df_test.columns[:-1]].copy().values
 y_test = df_test[df_test.columns[-1:]].copy().values
@@ -159,6 +158,7 @@ class server():
         self.model.eval()
         test_loss = 0
         for data, target in self.testLoader:
+            data, target = data.to(self.device), target.to(self.device)
             output = self.model(data)
             test_loss += F.mse_loss(output.view(-1), target, reduction='sum').item()
             predection = output.data.max(1, keepdim=True)[1]
