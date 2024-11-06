@@ -60,7 +60,7 @@ def get_samples(num_clients):
 
 #クライアントクラスの定義
 class client():
-    def __init__(self, number, loader, state_dict, batch_size = 32, epochs=10, lr=0.001):
+    def __init__(self, number, loader, state_dict, batch_size = 32, epochs=10, lr=0.01):
         self.number = number
         self.model = t_model()
         self.model.load_state_dict(state_dict)
