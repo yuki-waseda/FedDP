@@ -124,8 +124,9 @@ def metropolis_sampler(p, nsamples, proposal=uniform_proposal):
 
 
 class server():
-    def __init__(self, train, test, train_len, test_len, number_clients, p_budget, epsilon, sigmat = 1.12):
+    def __init__(self, train, test, train_len, test_len, number_clients, p_budget, epsilon):
         self.model = t_model()
+        sigmat = 1.12 + np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         self.sigmat = sigmat   
         self.n_clients = number_clients
         self.samples = get_samples(self.n_clients, train_len)
