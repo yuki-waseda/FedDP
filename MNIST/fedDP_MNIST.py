@@ -106,6 +106,7 @@ def view_classify(img, ps):
     ## 修正
     ##ps = ps.data.numpy().squeeze()    
     ps = ps.cpu().data.numpy().squeeze() 
+    img = img.cpu()
     fig, (ax1, ax2) = plt.subplots(figsize=(6,9), ncols=2)
     ax1.imshow(img.resize_(1, 28, 28).numpy().squeeze())
     ax1.axis('off')
