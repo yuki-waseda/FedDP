@@ -102,6 +102,7 @@ class t_model(nn.Module):
         return x
     
 #Return the samples that each client is going to have as a private training data set. This is a not overlapping set
+@profile
 def get_samples(num_clients, train_len):
     # tam = len(mnist_trainset)
     tam = train_len
@@ -118,10 +119,10 @@ def get_samples(num_clients, train_len):
         split = split+split_ini
     return samples
 #%%
-
+@profile
 def uniform_proposal(x, delta=2.0):
     return np.random.uniform(x - delta, x + delta)
-
+@profile
 def metropolis_sampler(p, nsamples, proposal=uniform_proposal):
     x = 1 # start somewhere
 
@@ -157,6 +158,7 @@ class server():
         
         
     #Evaluates the accuracy of the current model with the test data.  
+    @profile
     def eval_acc(self):
         test_lossList = []
         self.model.to(self.device)
@@ -187,7 +189,7 @@ class server():
         #     suma = suma + equals.sum().item()
         # else:      
         #     print('Accuracy: ',suma/float(total))
-    
+    @profile
     def sanitaze(self,mt, deltas, norms, sigma, state_dict):    
         new_dict = {}
         for key, value in state_dict.items():
@@ -237,7 +239,7 @@ class server():
             
         return new_dict
             
-            
+    @profile        
     def server_exec(self,mt):    
         i=1
         lossList = []
@@ -283,7 +285,7 @@ class client():
         self.epochs = epochs
         self.device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.dataLoader = loader                                       
-                                           
+    @profile                                       
     def update(self, state_dict):
         
         w0 = state_dict
