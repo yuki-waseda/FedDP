@@ -43,8 +43,8 @@ df_train = pd.concat([
 df_test = pd.concat([df,df_train]).drop_duplicates(keep=False)
 
 # ブール値を 0 と 1 に変換
-#df_train = df_train.replace({True: 1, False: 0})
-#df_test = df_test.replace({True: 1, False: 0})
+df_train = df_train.replace({True: 1, False: 0})
+df_test = df_test.replace({True: 1, False: 0})
 
 y_train = df_train[df_train.columns[-1:]].copy().values
 x_train = df_train[df_train.columns[:-1]].copy().values
