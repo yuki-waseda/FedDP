@@ -43,8 +43,8 @@ df_train = pd.concat([
 df_test = pd.concat([df,df_train]).drop_duplicates(keep=False)
 
 # ブール値を 0 と 1 に変換
-df_train = df_train.replace({True: 1, False: 0})
-df_test = df_test.replace({True: 1, False: 0})
+#df_train = df_train.replace({True: 1, False: 0})
+#df_test = df_test.replace({True: 1, False: 0})
 
 y_train = df_train[df_train.columns[-1:]].copy().values
 x_train = df_train[df_train.columns[:-1]].copy().values
@@ -69,42 +69,21 @@ class Parser:
     
 args = Parser()
 torch.manual_seed(args.seed)
-##ここから
-#mean = x_train.mean(0, keepdim=True)
-#dev = x_train.std(0, keepdim=True)
-#mean[:, 3] = 0.
-#dev[:, 3] = 1.
-#x_train = (x_train - mean) / dev
-#x_test = (x_test - mean) / dev
-#train = TensorDataset(x_train, y_train)
-#test = TensorDataset(x_test, y_test)
-#ここまで
 
-# 数値的な連続値（標準化対象の列インデックス）を指定します。
-# 例: [0, 1, 2, 5, 25] は Global_reactive_power, Voltage, Global_intensity, Sub_metering_3, Global_active_power の列。
-continuous_columns = [0, 1, 2, 3, 4, 5]
-
-# 平均と標準偏差を計算
 mean = x_train.mean(0, keepdim=True)
 dev = x_train.std(0, keepdim=True)
-
-# 標準化しない列を設定（上記以外の列の平均を0、標準偏差を1に設定して除外）
-for i in range(x_train.shape[1]):
-    if i not in continuous_columns:
-        mean[:, i] = 0.
-        dev[:, i] = 1.
-
-# 標準化
+mean[:, 3] = 0.
+dev[:, 3] = 1.
 x_train = (x_train - mean) / dev
 x_test = (x_test - mean) / dev
-
-# TensorDatasetに変換
 train = TensorDataset(x_train, y_train)
 test = TensorDataset(x_test, y_test)
 
-print(x_train[0], y_train[0])
-print(x_train[1], y_train[1])
-print(x_train[2], y_train[2])
+
+
+#print(x_train[0], y_train[0])
+#print(x_train[1], y_train[1])
+#print(x_train[2], y_train[2])
 # train_loader = DataLoader(train, batch_size=args.batch_size, shuffle=True)
 # test_loader = DataLoader(test, batch_size=args.test_batch_size, shuffle=True)
 #%%
