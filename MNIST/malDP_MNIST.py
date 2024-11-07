@@ -226,33 +226,38 @@ class server():
             prom = 1/float(mt)       
             suma = 0
             for i in range(len(deltas)):    
-                clip = (max(1, float(norms[i][key]/S_value)))            
-                suma = suma + ((deltas[i][key] / clip ))
+                clip = (max(1, float(norms[i][key]/S_value)))   
+                if(i<nmal):
+                    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
+                else: 
+                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)), float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
+                suma = suma + ((deltas[i][key] / clip )) + noise
 #             noise = np.random.normal(0, float(S_value * sigma), size = suma.shape)
-            if (len(suma.shape)==2):
-                u,v = suma.shape
-                mu = 0
-                sigma = float(S_value * sigma)
-                p = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
-                #p2 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
-                samples1 = list(metropolis_sampler(p, u*v))
-                sample1 = np.array(samples1)
-                noise1 = sample1.reshape((u,v))
-            else:
-                u = len(suma)
-                mu = 0
-                sigma = float(S_value * sigma)
-                p = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
-                #p2 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
-                samples2 = list(metropolis_sampler(p, u))
-                noise1 = np.array(samples2)
+            
+            #if (len(suma.shape)==2):
+            #    u,v = suma.shape
+            #    mu = 0
+            #    sigma = float(S_value * sigma)
+            #    p = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
+            #    #p2 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
+            #    samples1 = list(metropolis_sampler(p, u*v))
+            #    sample1 = np.array(samples1)
+            #    noise1 = sample1.reshape((u,v))
+            #else:
+            #    u = len(suma)
+            #    mu = 0
+            #    sigma = float(S_value * sigma)
+            #    p = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
+            #    #p2 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
+            #    samples2 = list(metropolis_sampler(p, u))
+            #    noise1 = np.array(samples2)
                 
-            noise = noise1
+            #noise = noise1
 
             suma = suma.cpu().numpy()
             suma = suma*prom
-            noise = noise*prom
-            suma = suma + noise 
+            #noise = noise*prom
+            #suma = suma + noise 
 
             suma = torch.from_numpy(suma)
             suma = wt + suma.float()
@@ -269,7 +274,6 @@ class server():
             self.eval_acc()         
             rdp = compute_rdp(float(mt/len(self.clients)), self.sigmat, i, self.orders)
             _,delta_spent, opt_order = get_privacy_spent(self.orders, rdp, target_eps=self.epsilon)
-            delta_spent=30*delta_spent
             print('Delta spent: ', delta_spent)
             print('Delta budget: ', self.p_budget)  
             
