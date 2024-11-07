@@ -281,7 +281,7 @@ class server():
             print('Delta spent: ', delta_spent)
             print('Delta budget: ', self.p_budget)  
             
-            if self.p_budget < delta_spent:
+            if self.p_budget*10000 < delta_spent:
                 break
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
