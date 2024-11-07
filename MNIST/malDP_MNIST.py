@@ -235,7 +235,7 @@ class server():
                 else: 
                     noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
                 
-                suma = suma + ((deltas[i][key].cpu().numpy() / clip )) 
+                suma = suma + ((deltas[i][key].cpu().numpy() / clip )) + noise
 #             noise = np.random.normal(0, float(S_value * sigma), size = suma.shape)
             
             #if (len(suma.shape)==2):
