@@ -216,6 +216,8 @@ class server():
     def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.1, nmal = 5):    
         new_dict = {}
         for key, value in state_dict.items():
+            print(len(deltas))
+            deltas[0][key] 
             S=[]
             for i in range(len(norms)):        
                 S.append(norms[i][key])
