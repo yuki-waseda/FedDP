@@ -58,6 +58,8 @@ x_test = torch.from_numpy(x_test).float()
 y_test = torch.from_numpy(y_test).float()
 
 #%%
+
+##無視
 class Parser:
     def __init__(self):
         self.epochs = 100
@@ -272,7 +274,7 @@ class server():
 #%%
 
 class client():
-    def __init__(self, number, loader, state_dict, batch_size = 24, epochs=10, lr=0.001):
+    def __init__(self, number, loader, state_dict, batch_size = 7, epochs=10, lr=0.1):
         self.number = number
         self.model = t_model()
         self.model.load_state_dict(state_dict)
