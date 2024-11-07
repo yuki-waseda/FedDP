@@ -81,9 +81,6 @@ test = TensorDataset(x_test, y_test)
 
 
 
-print(x_train[0], y_train[0])
-print(x_train[1], y_train[1])
-print(x_train[2], y_train[2])
 # train_loader = DataLoader(train, batch_size=args.batch_size, shuffle=True)
 # test_loader = DataLoader(test, batch_size=args.test_batch_size, shuffle=True)
 #%%
