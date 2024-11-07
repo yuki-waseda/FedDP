@@ -217,7 +217,7 @@ class server():
         new_dict = {}
         for key, value in state_dict.items():
             print(len(deltas))
-            deltas[0][key] 
+            print(deltas[0][key])
             S=[]
             for i in range(len(norms)):        
                 S.append(norms[i][key])
