@@ -216,8 +216,8 @@ class server():
     def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.1, nmal = 5):    
         new_dict = {}
         for key, value in state_dict.items():
-            print(len(deltas))
-            print(deltas[0][key])
+            #print(len(deltas))
+            #print(deltas[0][key])
             S=[]
             for i in range(len(norms)):        
                 S.append(norms[i][key])
@@ -267,7 +267,7 @@ class server():
 #             clear_output()
             print('Comunication round: ', i)
             self.eval_acc()         
-            rdp = compute_rdp(float(mt/len(self.clients)), self.sigmat, i, self.orders)
+            rdp = 30*compute_rdp(float(mt/len(self.clients)), self.sigmat, i, self.orders)
             _,delta_spent, opt_order = get_privacy_spent(self.orders, rdp, target_eps=self.epsilon)
             print('Delta spent: ', delta_spent)
             print('Delta budget: ', self.p_budget)  
@@ -315,7 +315,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 #%%
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
-serv = server(num_clients, 0.001, 8)
+serv = server(num_clients, 0.001, 1)
 model = serv.server_exec(30)
 
 #%%
