@@ -57,6 +57,7 @@ y_train = torch.from_numpy(y_train).float()
 x_test = torch.from_numpy(x_test).float()
 y_test = torch.from_numpy(y_test).float()
 print(x_train[0])
+print(y_train[0])
 
 #%%
 class Parser:
