@@ -61,7 +61,7 @@ y_test = torch.from_numpy(y_test).float()
 class Parser:
     def __init__(self):
         self.epochs = 100
-        self.lr = 0.001
+        self.lr = 0.1
         self.test_batch_size = 8
         self.batch_size = 24
         self.log_interval = 10
