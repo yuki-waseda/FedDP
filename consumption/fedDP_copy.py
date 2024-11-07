@@ -90,9 +90,9 @@ test = TensorDataset(x_test, y_test)
 class t_model(nn.Module):
     def __init__(self):
         super(t_model, self).__init__()
-        self.fc1 = nn.Linear(24, 32)
-        self.fc2 = nn.Linear(32, 16)
-        self.fc3 = nn.Linear(16, 1)
+        self.fc1 = nn.Linear(24, 12)
+        self.fc2 = nn.Linear(12, 6)
+        self.fc3 = nn.Linear(6, 1)
     
     def forward(self, x):
         x = x.view(-1, 24)
@@ -274,7 +274,7 @@ class server():
 #%%
 
 class client():
-    def __init__(self, number, loader, state_dict, batch_size = 7, epochs=10, lr=0.1):
+    def __init__(self, number, loader, state_dict, batch_size = 32, epochs=10, lr=0.001):
         self.number = number
         self.model = t_model()
         self.model.load_state_dict(state_dict)
