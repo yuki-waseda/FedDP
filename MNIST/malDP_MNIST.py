@@ -225,8 +225,10 @@ class server():
             wt = value
             prom = 1/float(mt)       
             suma = 0
+            suma = suma.cpu().numpy()
             for i in range(len(deltas)):    
                 clip = (max(1, float(norms[i][key]/S_value)))   
+                
                 if(i<nmal):
                     noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
                 else: 
@@ -254,7 +256,7 @@ class server():
                 
             #noise = noise1
 
-            suma = suma.cpu().numpy()
+
             suma = suma*prom
             #noise = noise*prom
             #suma = suma + noise 
