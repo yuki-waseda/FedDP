@@ -225,7 +225,6 @@ class server():
             wt = value
             prom = 1/float(mt)       
             suma = 0
-            suma = suma.cpu().numpy()
             for i in range(len(deltas)):    
                 clip = (max(1, float(norms[i][key]/S_value)))   
                 
