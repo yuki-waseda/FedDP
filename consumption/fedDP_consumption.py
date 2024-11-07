@@ -82,7 +82,7 @@ torch.manual_seed(args.seed)
 
 # 数値的な連続値（標準化対象の列インデックス）を指定します。
 # 例: [0, 1, 2, 5, 25] は Global_reactive_power, Voltage, Global_intensity, Sub_metering_3, Global_active_power の列。
-continuous_columns = [0, 1, 2, 5, 25]
+continuous_columns = [0, 1, 2, 3, 4, 5]
 
 # 平均と標準偏差を計算
 mean = x_train.mean(0, keepdim=True)
