@@ -162,8 +162,8 @@ class server():
         #sigmat = 1.12
         self.model = t_model()
         #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
-        #sigmat = 1.12 + np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
-        sigmat =  np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
+        sigmat = 1.12 + np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
+        #sigmat =  np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         self.sigmat = sigmat   
         self.n_clients = number_clients
         self.samples = get_samples(self.n_clients)
@@ -231,9 +231,11 @@ class server():
                 
                 if(i<nmal):
                     noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)), float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
+                
                 else: 
                     noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
-                suma = suma + ((deltas[i][key].cpu().numpy() / clip )) + noise
+                
+                suma = suma + ((deltas[i][key].cpu().numpy() / clip )) 
 #             noise = np.random.normal(0, float(S_value * sigma), size = suma.shape)
             
             #if (len(suma.shape)==2):
