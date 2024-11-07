@@ -233,8 +233,8 @@ class server():
                 u,v = suma.shape
                 mu = 0
                 sigma = float(S_value * sigma)
-                p1 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
-                p2 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
+                p = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
+                #p2 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
                 samples1 = list(metropolis_sampler(p, u*v))
                 sample1 = np.array(samples1)
                 noise1 = sample1.reshape((u,v))
@@ -242,8 +242,8 @@ class server():
                 u = len(suma)
                 mu = 0
                 sigma = float(S_value * sigma)
-                p1 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
-                p2 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
+                p = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
+                #p2 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
                 samples2 = list(metropolis_sampler(p, u))
                 noise1 = np.array(samples2)
                 
