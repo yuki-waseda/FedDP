@@ -230,7 +230,8 @@ class server():
                 
                 if(i<nmal):
                     noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
-                    print(noise)
+                    print(len(norms[i][key]))
+                    print(len(noise))
                 else: 
                     noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)), float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
                 suma = suma + ((deltas[i][key].cpu().numpy() / clip )) + noise
