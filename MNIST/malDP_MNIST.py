@@ -269,6 +269,7 @@ class server():
             self.eval_acc()         
             rdp = compute_rdp(float(mt/len(self.clients)), self.sigmat, i, self.orders)
             _,delta_spent, opt_order = get_privacy_spent(self.orders, rdp, target_eps=self.epsilon)
+            delta_spent=30*delta_spent
             print('Delta spent: ', delta_spent)
             print('Delta budget: ', self.p_budget)  
             
