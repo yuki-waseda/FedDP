@@ -118,12 +118,12 @@ class t_model(nn.Module):
     #    return x
     def __init__(self):
         super(t_model, self).__init__()
-        self.fc1 = nn.Linear(7, 4)
+        self.fc1 = nn.Linear(6, 4)
         self.fc3 = nn.Linear(4, 2)
         self.fc2 = nn.Linear(2, 1)
     
     def forward(self, x):
-        x = x.view(-1, 7)
+        x = x.view(-1, 6)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc3(x))
         # x = F.relu(self.fc4(x))
