@@ -96,6 +96,8 @@ train = TensorDataset(x_train, y_train)
 test = TensorDataset(x_test, y_test)
 
 
+print(x_train[0])
+
 
 # train_loader = DataLoader(train, batch_size=args.batch_size, shuffle=True)
 # test_loader = DataLoader(test, batch_size=args.test_batch_size, shuffle=True)
