@@ -32,6 +32,10 @@ df = pd.read_csv('/mnt/mp_nas_mks/yuki_data_copy/processed_household_power_consu
 #df_train = df[df.years == 2006].sample(frac = 0.8).append(df[df.years == 2007].sample(frac = 0.8)).append(
 #    df[df.years == 2008].sample(frac = 0.8)).append(df[df.years == 2009].sample(frac = 0.8)).append(df[df.years == 2010].sample(frac = 0.8))
 # 修正後
+
+df = df[['Global_reactive_power', 'Voltage', 'Global_intensity',
+       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3','Global_active_power', 'years']]
+
 df_train = pd.concat([
     df[df.years == 2006].sample(frac=0.8),
     df[df.years == 2007].sample(frac=0.8),
@@ -40,11 +44,19 @@ df_train = pd.concat([
     df[df.years == 2010].sample(frac=0.8)
 ], ignore_index=True)
 
+df_train = df_train[['Global_reactive_power', 'Voltage', 'Global_intensity',
+       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3', 'Sub_metering_4',
+       'Global_active_power']]
+
+df = df[['Global_reactive_power', 'Voltage', 'Global_intensity',
+       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3', 'Sub_metering_4',
+       'Global_active_power']]
+
 df_test = pd.concat([df,df_train]).drop_duplicates(keep=False)
 
 # ブール値を 0 と 1 に変換
-df_train = df_train.replace({True: 1, False: 0})
-df_test = df_test.replace({True: 1, False: 0})
+#df_train = df_train.replace({True: 1, False: 0})
+#df_test = df_test.replace({True: 1, False: 0})
 
 y_train = df_train[df_train.columns[-1:]].copy().values
 x_train = df_train[df_train.columns[:-1]].copy().values
@@ -74,8 +86,10 @@ torch.manual_seed(args.seed)
 
 mean = x_train.mean(0, keepdim=True)
 dev = x_train.std(0, keepdim=True)
-mean[:, 3] = 0.
-dev[:, 3] = 1.
+#mean[:, 3] = 0.
+#dev[:, 3] = 1.
+mean[:, int(len(mean[0])/2)] = 0.
+dev[:, int(len(dev[0])/2)] = 1.
 x_train = (x_train - mean) / dev
 x_test = (x_test - mean) / dev
 train = TensorDataset(x_train, y_train)
@@ -88,21 +102,35 @@ test = TensorDataset(x_test, y_test)
 #%%
 
 class t_model(nn.Module):
+    #def __init__(self):
+    #   super(t_model, self).__init__()
+    #    self.fc1 = nn.Linear(24, 12)
+    #    self.fc2 = nn.Linear(12, 6)
+    #    self.fc3 = nn.Linear(6, 1)
+    
+    #def forward(self, x):
+    #    x = x.view(-1, 24)
+    #    x = F.relu(self.fc1(x))
+    #    x = F.relu(self.fc2(x))
+    #    x = self.fc3(x)
+    #    return x
     def __init__(self):
         super(t_model, self).__init__()
-        self.fc1 = nn.Linear(24, 12)
-        self.fc2 = nn.Linear(12, 6)
-        self.fc3 = nn.Linear(6, 1)
+        self.fc1 = nn.Linear(7, 4)
+        self.fc3 = nn.Linear(4, 2)
+        self.fc2 = nn.Linear(2, 1)
     
     def forward(self, x):
-        x = x.view(-1, 24)
+        x = x.view(-1, 7)
         x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
+        x = F.relu(self.fc3(x))
+        # x = F.relu(self.fc4(x))
+        # x = F.relu(self.fc5(x))
+        x = self.fc2(x)
         return x
-    
+
 #Return the samples that each client is going to have as a private training data set. This is a not overlapping set
-@profile
+
 def get_samples(num_clients, train_len):
     # tam = len(mnist_trainset)
     tam = train_len
@@ -119,10 +147,10 @@ def get_samples(num_clients, train_len):
         split = split+split_ini
     return samples
 #%%
-@profile
+
 def uniform_proposal(x, delta=2.0):
     return np.random.uniform(x - delta, x + delta)
-@profile
+
 def metropolis_sampler(p, nsamples, proposal=uniform_proposal):
     x = 1 # start somewhere
 
@@ -158,7 +186,7 @@ class server():
         
         
     #Evaluates the accuracy of the current model with the test data.  
-    @profile
+
     def eval_acc(self):
         test_lossList = []
         self.model.to(self.device)
@@ -189,7 +217,7 @@ class server():
         #     suma = suma + equals.sum().item()
         # else:      
         #     print('Accuracy: ',suma/float(total))
-    @profile
+
     def sanitaze(self,mt, deltas, norms, sigma, state_dict):    
         new_dict = {}
         for key, value in state_dict.items():
@@ -238,8 +266,7 @@ class server():
             new_dict[key] = suma
             
         return new_dict
-            
-    @profile        
+        
     def server_exec(self,mt):    
         i=1
         lossList = []
@@ -285,7 +312,7 @@ class client():
         self.epochs = epochs
         self.device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.dataLoader = loader                                       
-    @profile                                       
+                                
     def update(self, state_dict):
         
         w0 = state_dict
