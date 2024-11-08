@@ -45,11 +45,11 @@ df_train = pd.concat([
 ], ignore_index=True)
 
 df_train = df_train[['Global_reactive_power', 'Voltage', 'Global_intensity',
-       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3', 'Sub_metering_4',
+       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3',
        'Global_active_power']]
 
 df = df[['Global_reactive_power', 'Voltage', 'Global_intensity',
-       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3', 'Sub_metering_4',
+       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3',
        'Global_active_power']]
 
 df_test = pd.concat([df,df_train]).drop_duplicates(keep=False)
