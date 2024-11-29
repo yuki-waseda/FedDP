@@ -162,7 +162,7 @@ class server():
         #sigmat = 1.12
         self.model = t_model()
         #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
-        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
+        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon +1.12
         #sigmat =  np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         self.sigmat = sigmat   
         self.n_clients = number_clients
@@ -214,8 +214,13 @@ class server():
 
     # This functions apply noise to the given deltas. 
     #差分プライバシー適用
-    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0, nmal = 5):    
+    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0):    
         new_dict = {}
+        inclMalSum_dict = {}
+        malModel = [5]
+        prom = 1/float(mt)   
+
+        sanitized_deltas = [{} for _ in range(len(deltas))] 
         for key, value in state_dict.items():
             #print(len(deltas))
             #print(deltas[0][key])
@@ -224,20 +229,61 @@ class server():
                 S.append(norms[i][key])
             S_value = np.median(S)      
             wt = value
-            prom = 1/float(mt)       
-            suma = 0
+
             for i in range(len(deltas)):    
                 clip = (max(1, float(norms[i][key]/S_value)))   
-                
-                if(i<nmal):
+                clippedDelta = ((deltas[i][key])/clip)
+                if any(i < m for m in malModel) :
                     noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)), float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
                 
                 else: 
                     noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
-                
-                suma = suma + ((deltas[i][key].cpu().numpy() / clip )) + noise
+                clippedDelta = clippedDelta.cpu().numpy()
+                modelSum = clippedDelta + noise
+                sanitized_deltas[i][key] = torch.from_numpy(modelSum).float().to('cpu')
+        
+        ##防御を実装
+        n = len(deltas)
+        f = malModel
+        k = n - f[0]
+        dim = 0
+        #各クライアントの次元数を取得
+        for key, value in sanitized_deltas[0].items():
+            dim += value.numel()  # テンソル内の要素数を取得
+        ##print(dim) 45
+        #パラメータを一次元に変換
+        #flattened_deltas = [{} for _ in range(len(deltas))] 
+        #for i in range(len(deltas)): 
+        #    flattened_deltas[i] = torch.cat([value.flatten() for value in sanitized_deltas[i].values()])
+        flattened_deltas = torch.stack([torch.cat([value.flatten() for value in sanitized_deltas[i].values()]) for i in range(len(deltas))])
+        ## print(len(flattened_deltas)) 30
+        ##print(flattened_deltas[0])
+        # 距離行列を計算
+        cdist = torch.cdist(flattened_deltas, flattened_deltas, p=2)
+        ##print(len(cdist)) 30
+        ##print(len(cdist[0])) 30
+        # find the k+1 nbh of each point
+        nbhDist, nbh = torch.topk(cdist, k, largest=False)
+        i_star = torch.argmin(nbhDist.sum(1))
+        ##print(nbh[i_star]) これが選ばれたパラメータ
+        count = (nbh[i_star] < 5).sum().item() ## 集約パラメータのうちの攻撃パラメータの数
 
-   
+        print(f"検出精度: {(malModel[0]-count)/malModel[0]}")
+        try:
+                prom = 1/float(k)
+        except:
+                prom = 1/24
+        ##グローバルモデル計算部分
+        for key, value in state_dict.items():
+            wt = value
+            inclMalSum = 0
+            for i in nbh[i_star]:
+                inclMalSum = inclMalSum + sanitized_deltas[i.item()][key] 
+            inclMalSum = inclMalSum*prom
+            inclMalSum = wt + inclMalSum
+            inclMalSum_dict[key] = inclMalSum
+        return inclMalSum_dict
+
 #             noise = np.random.normal(0, float(S_value * sigma), size = suma.shape)
             
             #if (len(suma.shape)==2):
@@ -261,15 +307,16 @@ class server():
             #noise = noise1
 
 
-            suma = suma*prom
-            #noise = noise*prom
-            #suma = suma + noise 
-
-            suma = torch.from_numpy(suma)
-            suma = wt + suma.float()
-            new_dict[key] = suma
-            
-        return new_dict
+        for key, value in state_dict.items():
+            wt = value
+            inclMalSum = 0
+            for i in range(mt):
+                inclMalSum = inclMalSum + sanitized_deltas[i][key] 
+            inclMalSum = inclMalSum*prom
+            inclMalSum = wt + inclMalSum
+            inclMalSum_dict[key] = inclMalSum
+        return inclMalSum_dict
+        
 
     #学習ラウンドの繰り返し
     def server_exec(self,mt):    
