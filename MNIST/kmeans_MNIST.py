@@ -214,7 +214,7 @@ class server():
 
     # This functions apply noise to the given deltas. 
     #差分プライバシー適用
-    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.1):    
+    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0):    
         new_dict = {}
         inclMalSum_dict = {}
         malModel = [5]
@@ -246,7 +246,6 @@ class server():
         n = len(deltas)
         f = malModel
         k = n - f[0]
-        print(k)
         dim = 0
         #各クライアントの次元数を取得
         for key, value in sanitized_deltas[0].items():
