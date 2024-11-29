@@ -214,11 +214,8 @@ class server():
 
     # This functions apply noise to the given deltas. 
     #差分プライバシー適用
-    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.025):    
+    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.025, nmal = 5):    
         new_dict = {}
-        inclMalSum_dict = {}
-        malModel = [[5]]
-        sanitized_deltas = [{} for _ in range(len(deltas))] 
         for key, value in state_dict.items():
             #print(len(deltas))
             #print(deltas[0][key])
@@ -229,19 +226,18 @@ class server():
             wt = value
             prom = 1/float(mt)       
             suma = 0
-
             for i in range(len(deltas)):    
                 clip = (max(1, float(norms[i][key]/S_value)))   
-                clippedDelta = ((deltas[i][key])/clip)
-                if any(i < m for m in malModel) :
+                
+                if(i<nmal):
                     noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)), float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
                 
                 else: 
                     noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
-                clippedDelta = ((deltas[i][key])/clip)
-                modelSum = clippedDelta + noise
-                sanitized_deltas[i][key] = torch.from_numpy(modelSum).float().to('cpu')
-            
+                
+                suma = suma + ((deltas[i][key].cpu().numpy() / clip )) + noise
+                if(i == 0):
+                    print(deltas[i][key].shape)
 #             noise = np.random.normal(0, float(S_value * sigma), size = suma.shape)
             
             #if (len(suma.shape)==2):
@@ -265,16 +261,15 @@ class server():
             #noise = noise1
 
 
-        for key, value in state_dict.items():
-            wt = value
-            inclMalSum = 0
-            for i in range(n=30):
-                inclMalSum = inclMalSum + sanitized_deltas[i][key] 
-            inclMalSum = inclMalSum*prom
-            inclMalSum = wt + inclMalSum
-            inclMalSum_dict[key] = inclMalSum
-        return inclMalSum_dict
-        
+            suma = suma*prom
+            #noise = noise*prom
+            #suma = suma + noise 
+
+            suma = torch.from_numpy(suma)
+            suma = wt + suma.float()
+            new_dict[key] = suma
+            
+        return new_dict
 
     #学習ラウンドの繰り返し
     def server_exec(self,mt):    
