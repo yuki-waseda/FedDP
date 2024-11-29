@@ -217,7 +217,7 @@ class server():
     def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.025):    
         new_dict = {}
         inclMalSum_dict = {}
-        malModel = [[5]]
+        malModel = [5]
         sanitized_deltas = [{} for _ in range(len(deltas))] 
         for key, value in state_dict.items():
             #print(len(deltas))
