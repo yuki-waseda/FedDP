@@ -268,7 +268,8 @@ class server():
         for key, value in state_dict.items():
             wt = value
             inclMalSum = 0
-            for i in range(n=30):
+            n = 30
+            for i in range(n):
                 inclMalSum = inclMalSum + sanitized_deltas[i][key] 
             inclMalSum = inclMalSum*prom
             inclMalSum = wt + inclMalSum
