@@ -214,12 +214,12 @@ class server():
 
     # This functions apply noise to the given deltas. 
     #差分プライバシー適用
-    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.0):    
+    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0):    
         new_dict = {}
         inclMalSum_dict = {}
         malModel = [5]
         prom = 1/float(mt)   
-        print(mt)
+
         sanitized_deltas = [{} for _ in range(len(deltas))] 
         for key, value in state_dict.items():
             #print(len(deltas))
@@ -229,8 +229,6 @@ class server():
                 S.append(norms[i][key])
             S_value = np.median(S)      
             wt = value
-             
-            suma = 0
 
             for i in range(len(deltas)):    
                 clip = (max(1, float(norms[i][key]/S_value)))   
