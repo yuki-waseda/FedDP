@@ -214,7 +214,7 @@ class server():
 
     # This functions apply noise to the given deltas. 
     #差分プライバシー適用
-    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.025):    
+    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.0):    
         new_dict = {}
         inclMalSum_dict = {}
         malModel = [5]
