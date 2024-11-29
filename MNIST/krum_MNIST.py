@@ -214,7 +214,7 @@ class server():
 
     # This functions apply noise to the given deltas. 
     #差分プライバシー適用
-    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.025, nmal = 5):    
+    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0, nmal = 5):    
         new_dict = {}
         for key, value in state_dict.items():
             #print(len(deltas))
@@ -236,8 +236,8 @@ class server():
                     noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
                 
                 suma = suma + ((deltas[i][key].cpu().numpy() / clip )) + noise
-                if(i == 0):
-                    print(deltas[i][key].shape)
+
+   
 #             noise = np.random.normal(0, float(S_value * sigma), size = suma.shape)
             
             #if (len(suma.shape)==2):
