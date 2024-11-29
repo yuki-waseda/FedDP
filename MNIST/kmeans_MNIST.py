@@ -214,7 +214,7 @@ class server():
 
     # This functions apply noise to the given deltas. 
     #差分プライバシー適用
-    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.0):    
+    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.01):    
         new_dict = {}
         inclMalSum_dict = {}
         malModel = [5]
@@ -389,7 +389,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 #%%
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
-serv = server(num_clients, 0.001, 8)
+serv = server(num_clients, 0.001, 4)
 model = serv.server_exec(30)
 
 #%%
