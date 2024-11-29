@@ -218,6 +218,8 @@ class server():
         new_dict = {}
         inclMalSum_dict = {}
         malModel = [5]
+        prom = 1/float(mt)   
+        print(mt)
         sanitized_deltas = [{} for _ in range(len(deltas))] 
         for key, value in state_dict.items():
             #print(len(deltas))
@@ -227,7 +229,7 @@ class server():
                 S.append(norms[i][key])
             S_value = np.median(S)      
             wt = value
-            prom = 1/float(mt)       
+             
             suma = 0
 
             for i in range(len(deltas)):    
@@ -268,8 +270,7 @@ class server():
         for key, value in state_dict.items():
             wt = value
             inclMalSum = 0
-            n = 30
-            for i in range(n):
+            for i in range(mt):
                 inclMalSum = inclMalSum + sanitized_deltas[i][key] 
             inclMalSum = inclMalSum*prom
             inclMalSum = wt + inclMalSum
