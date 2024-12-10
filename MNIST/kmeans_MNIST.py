@@ -393,6 +393,7 @@ serv = server(num_clients, 0.001, 1)
 model = serv.server_exec(30)
 
 #%%
+'''
 
 ###### Testing ########################
 # 標準正規分布のヒストグラム
@@ -454,3 +455,4 @@ plt.hist(np.sort(samples), bins=100)
 plt.hist(np.sort(samples1), bins=100)
 plt.show()
 #%%
+'''
