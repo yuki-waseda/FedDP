@@ -358,7 +358,7 @@ for epsilon in epsilon_values:
 
             # サーバー実行（100ラウンド）
             model, accuracies = serv.server_exec(30)
-
+            print(accuracies)
             # 結果をCSVに保存
             with open(output_file, "a", newline="") as csvfile:
                 writer = csv.writer(csvfile)
