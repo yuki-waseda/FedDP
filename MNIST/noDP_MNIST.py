@@ -121,7 +121,7 @@ num_clients = 30
 
 # 学習開始
 serv = server(num_clients)
-model = serv.server_exec(30,100)
+model = serv.server_exec(30,2)
 
 # Testing
 images, labels = next(iter(serv.testLoader))
