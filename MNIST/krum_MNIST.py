@@ -305,16 +305,6 @@ class server():
             #    noise1 = np.array(samples2)
                 
             #noise = noise1
-
-
-        for key, value in state_dict.items():
-            wt = value
-            inclMalSum = 0
-            for i in range(mt):
-                inclMalSum = inclMalSum + sanitized_deltas[i][key] 
-            inclMalSum = inclMalSum*prom
-            inclMalSum = wt + inclMalSum
-            inclMalSum_dict[key] = inclMalSum
         return inclMalSum_dict
         
 
