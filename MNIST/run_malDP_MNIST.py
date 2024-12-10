@@ -22,6 +22,8 @@ import warnings
 warnings.filterwarnings('ignore')
 import matplotlib.pyplot as plt
 import random
+print(type(csv))
+
 #%%
 
 #モデルの定義
