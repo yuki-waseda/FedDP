@@ -283,7 +283,7 @@ class server():
     def server_exec(self,mt):    
         i=1
         testLossList = []
-        while(i<2):
+        while(1):
 #             clear_output()
             print('Comunication round: ', i)
             test_loss = self.eval_acc()         
