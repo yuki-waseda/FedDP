@@ -158,7 +158,7 @@ def noiseGen(mu, sigma, suma):
 #@title
 #サーバークラス
 class server():
-    def __init__(self, number_clients, p_budget, epsilon):
+    def __init__(self, number_clients, p_budget, epsilon, gamma):
         #sigmat = 1.12
         self.model = t_model()
         #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
@@ -173,6 +173,7 @@ class server():
             self.clients.append(client(i, loader, self.model.state_dict()))
         self.p_budget = p_budget
         self.epsilon = epsilon
+        self.gamma = gamma
         self.testLoader = torch.utils.data.DataLoader(mnist_testset, batch_size=32)
         #修正
         #self.device = torch.device("cuda:0""cuda:0" if torch.cuda.is_available() else "cpu")
@@ -214,7 +215,7 @@ class server():
 
     # This functions apply noise to the given deltas. 
     #差分プライバシー適用
-    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0.1):    
+    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma):    
         new_dict = {}
         inclMalSum_dict = {}
         malModel = [5]
@@ -268,7 +269,7 @@ class server():
         ##print(nbh[i_star]) これが選ばれたパラメータ
         count = (nbh[i_star] < 5).sum().item() ## 集約パラメータのうちの攻撃パラメータの数
 
-        print(f"検出精度: {(malModel[0]-count)/malModel[0]}")
+        print(f"Detection Accuracy: {(malModel[0]-count)/malModel[0]}")
         try:
                 prom = 1/float(k)
         except:
@@ -282,7 +283,6 @@ class server():
             inclMalSum = inclMalSum*prom
             inclMalSum = wt + inclMalSum
             inclMalSum_dict[key] = inclMalSum
-        return inclMalSum_dict
 
 #             noise = np.random.normal(0, float(S_value * sigma), size = suma.shape)
             
@@ -330,7 +330,7 @@ class server():
             print('Delta spent: ', delta_spent)
             print('Delta budget: ', self.p_budget)  
             
-            if self.p_budget*10000 < delta_spent:
+            if self.p_budget < delta_spent:
                 break
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
@@ -340,7 +340,7 @@ class server():
                 deltas.append(deltaW)
                 norms.append(normW)     
             self.model.to('cpu')
-            new_state_dict = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict())
+            new_state_dict = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict(),self.gamma)
             self.model.load_state_dict(new_state_dict)
             i+=1
         return self.model
@@ -373,7 +373,10 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 #%%
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
-serv = server(num_clients, 0.001, 8)
+p_budget = 0.001
+epsilon = 8
+gamma = 0.03
+serv = server(num_clients, p_budget,epsilon ,gamma)
 model = serv.server_exec(30)
 
 #%%

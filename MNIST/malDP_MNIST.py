@@ -158,7 +158,7 @@ def noiseGen(mu, sigma, suma):
 #@title
 #サーバークラス
 class server():
-    def __init__(self, number_clients, p_budget, epsilon):
+    def __init__(self, number_clients, p_budget, epsilon,gamma):
         #sigmat = 1.12
         self.model = t_model()
         #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
@@ -166,6 +166,7 @@ class server():
         #sigmat =  np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         self.sigmat = sigmat   
         self.n_clients = number_clients
+        self.gamma = gamma
         self.samples = get_samples(self.n_clients)
         self.clients = list()
         for i in range(number_clients):
@@ -214,7 +215,7 @@ class server():
 
     # This functions apply noise to the given deltas. 
     #差分プライバシー適用
-    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma = 0):    
+    def sanitaze(self,mt, deltas, norms, sigma, state_dict, gamma):    
         new_dict = {}
         inclMalSum_dict = {}
         malModel = [5]
@@ -263,8 +264,6 @@ class server():
             #    noise1 = np.array(samples2)
                 
             #noise = noise1
-
-
         for key, value in state_dict.items():
             wt = value
             inclMalSum = 0
@@ -298,7 +297,7 @@ class server():
                 deltas.append(deltaW)
                 norms.append(normW)     
             self.model.to('cpu')
-            new_state_dict = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict())
+            new_state_dict = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict(),self.gamma)
             self.model.load_state_dict(new_state_dict)
             i+=1
         return self.model
@@ -331,7 +330,10 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 #%%
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
-serv = server(num_clients, 0.001, 8)
+p_budget = 0.001
+epsilon = 8
+gamma = 0.03
+serv = server(num_clients, p_budget, epsilon, gamma)
 model = serv.server_exec(30)
 
 #%%
