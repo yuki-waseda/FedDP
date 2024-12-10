@@ -203,9 +203,10 @@ class server():
             equals = top_class == labels.view(*top_class.shape)
             total += equals.size(0)
             suma = suma + equals.sum().item()
-        else:      
+        else:
+            accuracy = suma/float(total)
             print('Accuracy: ',suma/float(total))
-
+        return accuracy
 
 
 
@@ -358,7 +359,7 @@ for epsilon in epsilon_values:
 
             # サーバー実行（100ラウンド）
             model, accuracies = serv.server_exec(30)
-            print(accuracies)
+
             # 結果をCSVに保存
             with open(output_file, "a", newline="") as csvfile:
                 writer = csv.writer(csvfile)
