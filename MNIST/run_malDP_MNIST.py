@@ -279,10 +279,12 @@ class server():
     #学習ラウンドの繰り返し
     def server_exec(self,mt):    
         i=1
-        while(True):
+        testLossList = []
+        while(i<2):
 #             clear_output()
             print('Comunication round: ', i)
-            self.eval_acc()         
+            test_loss = self.eval_acc()         
+            testLossList.append(test_loss) 
             rdp = compute_rdp(float(mt/len(self.clients)), self.sigmat, i, self.orders)
             _,delta_spent, opt_order = get_privacy_spent(self.orders, rdp, target_eps=self.epsilon)
             print('Delta spent: ', delta_spent)
@@ -301,7 +303,7 @@ class server():
             new_state_dict = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict(),self.gamma)
             self.model.load_state_dict(new_state_dict)
             i+=1
-        return self.model
+        return self.model,testLossList
             
 #             images, labels = next(iter(valloader))
 #             img = images[0].view(1, 784)

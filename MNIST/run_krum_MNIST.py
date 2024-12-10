@@ -294,7 +294,8 @@ class server():
                 prom = 1/float(k)
         except:
                 prom = 1/24
-        print(f"Detection Accuracy: {(malModel[0]-count)/malModel[0]}")
+        detection_accuracy = (malModel[0]-count)/malModel[0]
+        print(f"Detection Accuracy: {detection_accuracy}")
         for key, value in state_dict.items():
             wt = value
             inclMalSum = 0
@@ -303,7 +304,7 @@ class server():
             inclMalSum = inclMalSum*prom
             inclMalSum = wt + inclMalSum
             inclMalSum_dict[key] = inclMalSum
-        return inclMalSum_dict
+        return inclMalSum_dict,detection_accuracy 
         
 
     #学習ラウンドの繰り返し
