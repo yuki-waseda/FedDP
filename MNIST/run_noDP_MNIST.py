@@ -135,7 +135,7 @@ for run in range(1, num_runs + 1):
     serv = server(num_clients)
 
     # サーバー実行（100ラウンド）
-    model, accuracies = serv.server_exec(30, 2)
+    model, accuracies = serv.server_exec(30, 100)
 
     # 結果をCSVに保存
     with open(output_file, "a", newline="") as csvfile:
