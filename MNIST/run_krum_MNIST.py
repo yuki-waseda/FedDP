@@ -310,10 +310,13 @@ class server():
     #学習ラウンドの繰り返し
     def server_exec(self,mt):    
         i=1
+        testLossList = []
+        detection_accuracyList = []
         while(True):
 #             clear_output()
             print('Comunication round: ', i)
-            self.eval_acc()         
+            test_loss = self.eval_acc()         
+            testLossList.append(test_loss) 
             rdp = compute_rdp(float(mt/len(self.clients)), self.sigmat, i, self.orders)
             _,delta_spent, opt_order = get_privacy_spent(self.orders, rdp, target_eps=self.epsilon)
             print('Delta spent: ', delta_spent)
@@ -329,10 +332,11 @@ class server():
                 deltas.append(deltaW)
                 norms.append(normW)     
             self.model.to('cpu')
-            new_state_dict = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict(),self.gamma)
+            new_state_dict, detection_accuracy = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict(),self.gamma)
+            detection_accuracyList.append(detection_accuracy) 
             self.model.load_state_dict(new_state_dict)
             i+=1
-        return self.model
+        return self.model,testLossList,detection_accuracyList
             
 #             images, labels = next(iter(valloader))
 #             img = images[0].view(1, 784)
@@ -366,7 +370,7 @@ output_file = "nodp_result.csv"
 if not os.path.exists(output_file):
     with open(output_file, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["run", "epsilon", "gamma", "round", "accuracy"])
+        writer.writerow(["run", "epsilon", "gamma", "round", "accuracy", "detection_accuracy"])
 
 # 実験パラメータ
 epsilon_values = [1, 4, 8]
@@ -384,11 +388,13 @@ for epsilon in epsilon_values:
             serv = server(num_clients, p_budget,epsilon,gamma)
 
             # サーバー実行（100ラウンド）
-            model, accuracies = serv.server_exec(30)
+            model, accuracies, detection_accuracies= serv.server_exec(30)
 
             # 結果をCSVに保存
             with open(output_file, "a", newline="") as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerows([[run, epsilon, gamma, round_num, acc] for round_num, acc in enumerate(accuracies, start=1)])
+                writer.writerows([[run, epsilon, gamma, round_num, acc,dacc] 
+                                  for round_num, (acc, dacc) in enumerate(zip(accuracies, detection_accuracies), start=1)
+                                  ])
 
 print(f"\nAll results saved to {output_file}")
