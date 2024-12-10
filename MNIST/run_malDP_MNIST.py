@@ -12,6 +12,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torch
+import csv
 from torch.utils.data.sampler import SubsetRandomSampler
 import numpy as np
 from IPython.display import clear_output
@@ -22,7 +23,6 @@ import warnings
 warnings.filterwarnings('ignore')
 import matplotlib.pyplot as plt
 import random
-print(type(csv))
 
 #%%
 
