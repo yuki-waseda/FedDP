@@ -333,7 +333,7 @@ test_len = len(mnist_testset)
 valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=True)
 
 # 実行結果を保存するファイル名
-output_file = "nodp_result.csv"
+output_file = "maldp_result.csv"
 
 # CSVファイルが存在しない場合にヘッダーを追加
 if not os.path.exists(output_file):
