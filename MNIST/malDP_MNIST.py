@@ -261,7 +261,7 @@ class server():
             #    p = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
             #    #p2 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - np.sqrt(2*gamma)*sigma)**2)/2./sigma/sigma)
             #    samples2 = list(metropolis_sampler(p, u))
-            #    noise1 = np.array(samples2)
+            #    noise1 = np.array(samplesxx)
                 
             #noise = noise1
         for key, value in state_dict.items():

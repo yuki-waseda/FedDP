@@ -103,8 +103,8 @@ class server():
             new_state_dict[key] = sum(client_model[key] for client_model in client_models) / len(client_models)
         return new_state_dict
 
-    def server_exec(self, mt):
-        for round_num in range(1, mt + 1):
+    def server_exec(self, mt, max_rounds):
+        for round_num in range(1, max_rounds):
             print(f'Communication round: {round_num}')
             self.eval_acc()
             selected_clients = random.sample(self.clients, k=mt)
@@ -117,11 +117,11 @@ class server():
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
 mnist_trainset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
 mnist_testset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
-num_clients = 100
+num_clients = 30
 
 # 学習開始
 serv = server(num_clients)
-model = serv.server_exec(30)
+model = serv.server_exec(30,100)
 
 # Testing
 images, labels = next(iter(serv.testLoader))
