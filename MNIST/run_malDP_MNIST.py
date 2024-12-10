@@ -362,6 +362,6 @@ for epsilon in epsilon_values:
             # 結果をCSVに保存
             with open(output_file, "a", newline="") as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerows([[run, epsilon, gamma, round_num, acc] for round_num, acc in enumerate(accuracies, start=1)])
+                writer.writerows([[run, epsilon, gamma, round_num, acc] for round_num, acc in enumerate(accuracies, start=0)])
 
 print(f"\nAll results saved to {output_file}")
