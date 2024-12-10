@@ -341,6 +341,7 @@ if not os.path.exists(output_file):
 epsilon_values = [1, 4, 8]
 gamma_values = [0, 0.01, 0.02, 0.03]
 num_runs = 3
+p_budget = 0.001
 
 # 実験の実行
 for epsilon in epsilon_values:
@@ -349,7 +350,7 @@ for epsilon in epsilon_values:
             print(f"Run {run}/{num_runs} for epsilon={epsilon}, gamma={gamma}")
 
             # サーバーインスタンス作成
-            serv = server(num_clients)
+            serv = server(num_clients, p_budget,epsilon,gamma)
 
             # サーバー実行（100ラウンド）
             model, accuracies = serv.server_exec(30, 100)
