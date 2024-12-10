@@ -127,7 +127,7 @@ if not os.path.exists(output_file):
         writer.writerow(["run", "round", "accuracy"])
 
 # 5回の実行
-num_runs = 5
+num_runs = 3
 for run in range(1, num_runs + 1):
     print(f"Run {run}/{num_runs}")
 
@@ -135,7 +135,7 @@ for run in range(1, num_runs + 1):
     serv = server(num_clients)
 
     # サーバー実行（100ラウンド）
-    model, accuracies = serv.server_exec(30, 100)
+    model, accuracies = serv.server_exec(30, 2)
 
     # 結果をCSVに保存
     with open(output_file, "a", newline="") as csvfile:
