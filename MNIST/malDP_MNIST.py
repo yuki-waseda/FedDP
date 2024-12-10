@@ -322,7 +322,7 @@ mnist_testset = datasets.MNIST(root='./data', train=False, download=True, transf
 #修正
 #device =  torch.device("cuda:0""cuda:0" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-num_clients = 100
+num_clients = 30
 train_len = len(mnist_trainset)
 test_len = len(mnist_testset)
 valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=True)
@@ -332,7 +332,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 # デルタバジェットBとプライバシー予算εを指定
 p_budget = 0.001
 epsilon = 1
-gamma = 0.1
+gamma = 0
 serv = server(num_clients, p_budget, epsilon, gamma)
 model = serv.server_exec(30)
 
