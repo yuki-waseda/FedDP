@@ -104,7 +104,7 @@ class server():
         return new_state_dict
 
     def server_exec(self, mt, max_rounds):
-        for round_num in range(1, max_rounds):
+        for round_num in range(1, max_rounds+1):
             print(f'Communication round: {round_num}')
             self.eval_acc()
             selected_clients = random.sample(self.clients, k=mt)
@@ -121,7 +121,7 @@ num_clients = 30
 
 # 学習開始
 serv = server(num_clients)
-model = serv.server_exec(30,2)
+model = serv.server_exec(30,100)
 
 # Testing
 images, labels = next(iter(serv.testLoader))
