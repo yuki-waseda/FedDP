@@ -337,7 +337,7 @@ serv = server(num_clients, p_budget, epsilon, gamma)
 model = serv.server_exec(30)
 
 #%%
-
+'''
 ###### Testing ########################
 # 標準正規分布のヒストグラム
 images, labels = next(iter(valloader))
@@ -398,3 +398,4 @@ plt.hist(np.sort(samples), bins=100)
 plt.hist(np.sort(samples1), bins=100)
 plt.show()
 #%%
+'''
