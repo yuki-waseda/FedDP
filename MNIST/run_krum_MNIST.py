@@ -315,7 +315,7 @@ class server():
         i=1
         testLossList = []
         detection_accuracyList = []
-        while(i<2):
+        while(1):
 #             clear_output()
             print('Comunication round: ', i)
             test_loss = self.eval_acc()         
@@ -376,8 +376,8 @@ if not os.path.exists(output_file):
         writer.writerow(["run", "epsilon", "gamma", "round", "accuracy", "detection_accuracy"])
 
 # 実験パラメータ
-epsilon_values = [8]
-gamma_values = [0.03]
+epsilon_values = [1,4,8]
+gamma_values = [0.01,0.02,0.03]
 num_runs = 3
 p_budget = 0.001
 
