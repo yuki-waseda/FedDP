@@ -312,7 +312,7 @@ class server():
         i=1
         testLossList = []
         detection_accuracyList = []
-        while(True):
+        while(i<2):
 #             clear_output()
             print('Comunication round: ', i)
             test_loss = self.eval_acc()         
