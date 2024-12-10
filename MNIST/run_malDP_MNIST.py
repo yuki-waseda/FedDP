@@ -353,7 +353,7 @@ for epsilon in epsilon_values:
             serv = server(num_clients, p_budget,epsilon,gamma)
 
             # サーバー実行（100ラウンド）
-            model, accuracies = serv.server_exec(30, 100)
+            model, accuracies = serv.server_exec(30)
 
             # 結果をCSVに保存
             with open(output_file, "a", newline="") as csvfile:
