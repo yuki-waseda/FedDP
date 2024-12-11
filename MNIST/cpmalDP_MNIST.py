@@ -315,7 +315,7 @@ num_clients = 30
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
 p_budget = 0.001
-epsilon = 8
+epsilon = 32
 gamma = 0
 serv = server(num_clients, p_budget, epsilon, gamma)
 model = serv.server_exec(30)
