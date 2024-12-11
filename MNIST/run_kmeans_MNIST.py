@@ -99,7 +99,7 @@ class client():
         wt1 = {}
         for key, value in w0.items():
             wt1[key] = self.model.state_dict()[key]  - value   
-            S[key] = LA.norm(wt1[key].cpu(), 2)
+            S[key] = LA.norm(wt1[key].cpu(), 1)
         return wt1, S
 #%%
 
@@ -395,7 +395,7 @@ if not os.path.exists(output_file):
 
 # 実験パラメータ
 epsilon_values = [1,4,8]
-gamma_values = [0.01,0.02,0.03]
+gamma_values = [0,0.01,0.02,0.03]
 num_runs = 3
 p_budget = 0.001
 
