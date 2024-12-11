@@ -42,18 +42,14 @@ class t_model(nn.Module):
 #Return the samples that each client is going to have as a private training data set. This is a not overlapping set
 def get_samples(num_clients):
     tam = len(mnist_trainset)
-    split= int(tam/num_clients)
-    split_ini = split
+    split = int(tam / num_clients)
     indices = list(range(tam))
-    init=0
     samples = []
-    for i in range(num_clients):     
-        t_idx = indices[init:split]
+    for i in range(num_clients):
+        t_idx = indices[i * split:(i + 1) * split]
         t_sampler = SubsetRandomSampler(t_idx)
         samples.append(t_sampler)
-        init = split
-        split = split+split_ini
-    return samples 
+    return samples
       
 
 #%%
@@ -88,7 +84,7 @@ class client():
             for images, labels in self.dataLoader:            
                 images, labels = images.to(self.device), labels.to(self.device)                       
                 self.optimizer.zero_grad()            
-                output = self.model.forward(images)
+                output = self.model(images)
                 loss = self.criterion(output, labels)
                 loss.backward()
                 self.optimizer.step()            
@@ -168,10 +164,7 @@ class server():
         self.n_clients = number_clients
         self.gamma = gamma
         self.samples = get_samples(self.n_clients)
-        self.clients = list()
-        for i in range(number_clients):
-            loader = torch.utils.data.DataLoader(mnist_trainset, batch_size=32, sampler=self.samples[i])
-            self.clients.append(client(i, loader, self.model.state_dict()))
+        self.clients = [client(i, torch.utils.data.DataLoader(mnist_trainset, batch_size=32, sampler=self.samples[i]), self.model.state_dict()) for i in range(number_clients)]
         self.p_budget = p_budget
         self.epsilon = epsilon
         self.testLoader = torch.utils.data.DataLoader(mnist_testset, batch_size=32)
@@ -185,23 +178,18 @@ class server():
     #Evaluates the accuracy of the current model with the test data.  
     def eval_acc(self):
         self.model.to(self.device)
-        #print('Aqui voy!')
-        running_loss = 0
-        accuracy = 0
         self.model.eval()
-        suma=0
-        total = 0
-        running_loss = 0
-        for images, labels in self.testLoader:            
-            images, labels = images.to(self.device), labels.to(self.device) 
-            output = self.model.forward(images)             
-            ps = torch.exp(output)
-            top_p, top_class = ps.topk(1, dim=1)
-            equals = top_class == labels.view(*top_class.shape)
-            total += equals.size(0)
-            suma = suma + equals.sum().item()
-        else:      
-            print('Accuracy: ',suma/float(total))
+        total, correct = 0, 0
+        with torch.no_grad():
+            for images, labels in self.testLoader:
+                images, labels = images.to(self.device), labels.to(self.device)
+                output = self.model(images)
+                _, preds = torch.max(output, 1)
+                correct += (preds == labels).sum().item()
+                total += labels.size(0)
+        accuracy = correct / total
+        print('Accuracy:', accuracy)
+        return accuracy
 
 
 
@@ -323,10 +311,6 @@ mnist_testset = datasets.MNIST(root='./data', train=False, download=True, transf
 #device =  torch.device("cuda:0""cuda:0" if torch.cuda.is_available() else "cpu")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 num_clients = 30
-train_len = len(mnist_trainset)
-test_len = len(mnist_testset)
-valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=True)
-
 #%%
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
