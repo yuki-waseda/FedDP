@@ -1,0 +1,2 @@
+run,epsilon,gamma,round,accuracy,detection_accuracy
+1,8,0.03,1,0.1038,1.0

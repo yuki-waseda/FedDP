@@ -128,7 +128,7 @@ if not os.path.exists(output_file):
 
 # 5回の実行
 num_runs = 3
-for run in range(1, num_runs + 1):
+for run in range(2, num_runs + 1):
     print(f"Run {run}/{num_runs}")
 
     # サーバーインスタンス作成
