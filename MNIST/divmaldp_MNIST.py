@@ -97,7 +97,7 @@ class client():
         wt1 = {}
         for key, value in w0.items():
             wt1[key] = self.model.state_dict()[key]  - value   
-            S[key] = LA.norm(wt1[key].cpu(), 2)
+            S[key] = LA.norm(wt1[key].cpu(), 1)
         return wt1, S
 #%%
 
