@@ -99,7 +99,7 @@ class client():
         wt1 = {}
         for key, value in w0.items():
             wt1[key] = self.model.state_dict()[key]  - value   
-            S[key] = LA.norm(wt1[key].cpu(), 1)
+            S[key] = LA.norm(wt1[key].cpu(), 2)
         return wt1, S
 #%%
 
@@ -345,6 +345,9 @@ class server():
             
             #if self.p_budget < delta_spent:
             #    break
+            if self.epsilon==1:
+                if 11 < i:
+                    break
             if 50 < i:
                 break
             Zt = np.random.choice(self.clients, mt)      
