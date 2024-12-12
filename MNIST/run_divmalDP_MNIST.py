@@ -239,10 +239,10 @@ class server():
                 clip = (max(1, float(norms[i][key]/S_value)))   
                 clippedDelta = ((deltas[i][key])/clip)
                 if any(i < m for m in malModel) :
-                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)), float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
+                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/30), float((sigma**2)*(S_value**2)/30), size = deltas[i][key].shape))
                 
                 else: 
-                    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
+                    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)/30), size = deltas[i][key].shape))
                 clippedDelta = clippedDelta.cpu().numpy()
                 modelSum = clippedDelta + noise
                 sanitized_deltas[i][key] = torch.from_numpy(modelSum).float().to('cpu')
@@ -293,10 +293,10 @@ class server():
             print('Delta spent: ', delta_spent)
             print('Delta budget: ', self.p_budget)  
             
-            if self.epsilon== 1:
-                if self.p_budget < delta_spent:
-                    break
-            if 40<i:
+            #if self.epsilon== 1:
+            #    if self.p_budget < delta_spent:
+            #        break
+            if 50<i:
                 break
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
@@ -337,7 +337,7 @@ test_len = len(mnist_testset)
 valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=True)
 
 # 実行結果を保存するファイル名
-output_file = "maldp_result.csv"
+output_file = "divmaldp_result.csv"
 
 # CSVファイルが存在しない場合にヘッダーを追加
 if not os.path.exists(output_file):
