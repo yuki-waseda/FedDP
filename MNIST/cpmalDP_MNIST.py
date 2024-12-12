@@ -158,8 +158,9 @@ class server():
         #sigmat = 1.12
         self.model = t_model()
         #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
-        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon +0.1
+        #sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon +1.12
         #sigmat =  np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
+        sigmat = 0
         self.sigmat = sigmat   
         self.n_clients = number_clients
         self.gamma = gamma
@@ -275,8 +276,8 @@ class server():
             print('Delta spent: ', delta_spent)
             print('Delta budget: ', self.p_budget)  
             
-            if self.p_budget < delta_spent:
-                break
+            #if self.p_budget < delta_spent:
+            #    break
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
             norms = []
@@ -314,8 +315,8 @@ num_clients = 30
 #%%
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
-p_budget = 1
-epsilon = 32
+p_budget = 0.001
+epsilon = 8
 gamma = 0
 serv = server(num_clients, p_budget, epsilon, gamma)
 model = serv.server_exec(30)
