@@ -242,7 +242,7 @@ class server():
                     noise = (np.random.normal((np.sqrt(2*gamma/30)*(sigma*S_value)), float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
                 
                 else: 
-                    noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
+                    noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))                
                 clippedDelta = clippedDelta.cpu().numpy()
                 modelSum = clippedDelta + noise
                 sanitized_deltas[i][key] = torch.from_numpy(modelSum).float().to('cpu')
