@@ -6,11 +6,13 @@ Created on Tue Jun  8 19:08:45 2021
 """
 
 import torchvision
+import os
 from torchvision import datasets, transforms
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torch
+import csv
 from torch.utils.data.sampler import SubsetRandomSampler
 import numpy as np
 from IPython.display import clear_output
@@ -21,6 +23,7 @@ import warnings
 warnings.filterwarnings('ignore')
 import matplotlib.pyplot as plt
 import random
+
 #%%
 
 #モデルの定義
@@ -97,7 +100,7 @@ class client():
         wt1 = {}
         for key, value in w0.items():
             wt1[key] = self.model.state_dict()[key]  - value   
-            S[key] = LA.norm(wt1[key].cpu(), 2)
+            S[key] = LA.norm(wt1[key].cpu(), 1)
         return wt1, S
 #%%
 
@@ -200,9 +203,10 @@ class server():
             equals = top_class == labels.view(*top_class.shape)
             total += equals.size(0)
             suma = suma + equals.sum().item()
-        else:      
+        else:
+            accuracy = suma/float(total)
             print('Accuracy: ',suma/float(total))
-
+        return accuracy
 
 
 
@@ -235,10 +239,10 @@ class server():
                 clip = (max(1, float(norms[i][key]/S_value)))   
                 clippedDelta = ((deltas[i][key])/clip)
                 if any(i < m for m in malModel) :
-                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/30), float((sigma**2)*(S_value**2)/30), size = deltas[i][key].shape))
+                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)), float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
                 
                 else: 
-                    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)/30), size = deltas[i][key].shape))
+                    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)), size = deltas[i][key].shape))
                 clippedDelta = clippedDelta.cpu().numpy()
                 modelSum = clippedDelta + noise
                 sanitized_deltas[i][key] = torch.from_numpy(modelSum).float().to('cpu')
@@ -278,16 +282,21 @@ class server():
     #学習ラウンドの繰り返し
     def server_exec(self,mt):    
         i=1
-        while(True):
+        testLossList = []
+        while(1):
 #             clear_output()
             print('Comunication round: ', i)
-            self.eval_acc()         
-            rdp = compute_rdp(0.3, self.sigmat, i, self.orders)
+            test_loss = self.eval_acc()         
+            testLossList.append(test_loss) 
+            rdp = compute_rdp(float(mt/len(self.clients)), self.sigmat, i, self.orders)
             _,delta_spent, opt_order = get_privacy_spent(self.orders, rdp, target_eps=self.epsilon)
             print('Delta spent: ', delta_spent)
             print('Delta budget: ', self.p_budget)  
             
-            if self.p_budget < delta_spent:
+            if self.epsilon== 1:
+                if self.p_budget < delta_spent:
+                    break
+            if 40<i:
                 break
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
@@ -300,7 +309,7 @@ class server():
             new_state_dict = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict(),self.gamma)
             self.model.load_state_dict(new_state_dict)
             i+=1
-        return self.model
+        return self.model,testLossList
             
 #             images, labels = next(iter(valloader))
 #             img = images[0].view(1, 784)
@@ -327,75 +336,36 @@ train_len = len(mnist_trainset)
 test_len = len(mnist_testset)
 valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=True)
 
-#%%
-#We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
-# デルタバジェットBとプライバシー予算εを指定
+# 実行結果を保存するファイル名
+output_file = "maldp_result.csv"
+
+# CSVファイルが存在しない場合にヘッダーを追加
+if not os.path.exists(output_file):
+    with open(output_file, "w", newline="") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["run", "epsilon", "gamma", "round", "accuracy"])
+
+# 実験パラメータ
+epsilon_values = [1, 4, 8]
+gamma_values = [0, 0.01, 0.02, 0.03]
+num_runs = 3
 p_budget = 0.001
-epsilon = 8
-gamma = 0
-serv = server(num_clients, p_budget, epsilon, gamma)
-model = serv.server_exec(30)
 
-#%%
-'''
-###### Testing ########################
-# 標準正規分布のヒストグラム
-images, labels = next(iter(valloader))
-img = images[0].view(1, 784)
-# Turn off gradients to speed up this part
-img = img.to(device)
-with torch.no_grad():
-    logps = model(img)
+# 実験の実行
+for epsilon in epsilon_values:
+    for gamma in gamma_values:
+        for run in range(1, num_runs + 1):
+            print(f"Run {run}/{num_runs} for epsilon={epsilon}, gamma={gamma}")
 
-# Output of the network are log-probabilities, need to take exponential for probabilities
-ps = torch.exp(logps)
-probab = list(ps.cpu().numpy()[0])
-print("Predicted Digit =", probab.index(max(probab)))
-view_classify(img.view(1, 28, 28), ps)
-#%%
+            # サーバーインスタンス作成
+            serv = server(num_clients, p_budget,epsilon,gamma)
 
-############### Distribution ##############################
-#カスタム分布のヒストグラム
-import matplotlib.pyplot as plt
+            # サーバー実行（100ラウンド）
+            model, accuracies = serv.server_exec(30)
 
-mu, sigma = 0, 0.1
-s = np.random.normal(mu, sigma, 1000)
-count, bins, ignored = plt.hist(s, 30, density=True)
-plt.plot(bins, 1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2) ),
-         linewidth=2, color='r')
-plt.show()
+            # 結果をCSVに保存
+            with open(output_file, "a", newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerows([[run, epsilon, gamma, round_num, acc] for round_num, acc in enumerate(accuracies, start=1)])
 
-#%%
-
-###################### Customized Distribution ####################
-def uniform_proposal(x, delta=2.0):
-    return np.random.uniform(x - delta, x + delta)
-
-def metropolis_sampler(p, nsamples, proposal=uniform_proposal):
-    x = 1 # start somewhere
-
-    for i in range(nsamples):
-        trial = proposal(x) # random neighbour from the proposal distribution
-        acceptance = p(trial)/p(x)
-
-        # accept the move conditionally
-        if np.random.uniform() < acceptance:
-            x = trial
-        yield x
-
-
-# def gaussian(x, mu, sigma):
-#     return 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
-mu = 0
-sigma = 0.1
-p = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu - sigma* np.sqrt(2*np.pi))**2)/2./sigma/sigma)
-samples = list(metropolis_sampler(p, 10000))
-
-p1 = lambda x: 1./sigma/np.sqrt(2*np.pi)*np.exp(-((x-mu)**2)/2./sigma/sigma)
-samples1 = list(metropolis_sampler(p1, 10000))
-
-plt.hist(np.sort(samples), bins=100)
-plt.hist(np.sort(samples1), bins=100)
-plt.show()
-#%%
-'''
+print(f"\nAll results saved to {output_file}")
