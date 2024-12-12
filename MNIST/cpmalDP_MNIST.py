@@ -160,7 +160,7 @@ class server():
         #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         #sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon +1.12
         #sigmat =  np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
-        sigmat = 0
+        sigmat = 0.00001
         self.sigmat = sigmat   
         self.n_clients = number_clients
         self.gamma = gamma
