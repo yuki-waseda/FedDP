@@ -228,7 +228,7 @@ class server():
             S=[]
             for i in range(len(norms)):        
                 S.append(norms[i][key])
-            S_value = np.median(S)      
+            S_value = np.mean(S)      
             wt = value
 
             for i in range(len(deltas)):    

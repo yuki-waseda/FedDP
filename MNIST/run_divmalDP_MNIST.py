@@ -296,6 +296,9 @@ class server():
             #if self.epsilon== 1:
             #    if self.p_budget < delta_spent:
             #        break
+            if self.epsilon==1:
+                if 11 < i:
+                    break
             if 50<i:
                 break
             Zt = np.random.choice(self.clients, mt)      
