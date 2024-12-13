@@ -234,17 +234,17 @@ class server():
             for i in range(len(deltas)):    
                 clip = (max(1, float(norms[i][key]/S_value)))   
                 clippedDelta = ((deltas[i][key])/clip)
-                if any(i < m for m in malModel) :
-                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/30), float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
-                
-                else: 
-                    noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))      
-
                 #if any(i < m for m in malModel) :
-                #    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/30), float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
+                #    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/30), float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
                 
                 #else: 
-                #    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
+                #    noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))      
+
+                if any(i < m for m in malModel) :
+                    noise = (np.random.normal((np.sqrt(2*gamma/30)*(sigma*S_value)), float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
+                
+                else: 
+                    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
                 clippedDelta = clippedDelta.cpu().numpy()
                 modelSum = clippedDelta + noise
                 sanitized_deltas[i][key] = torch.from_numpy(modelSum).float().to('cpu')
@@ -371,7 +371,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 # デルタバジェットBとプライバシー予算εを指定
 p_budget = 0.001
 epsilon = 4
-gamma = 0.05
+gamma = 0.03
 # 0.1, 0.03で100%検出
 serv = server(num_clients, p_budget,epsilon ,gamma)
 model = serv.server_exec(30)
