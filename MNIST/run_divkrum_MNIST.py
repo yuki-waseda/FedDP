@@ -386,7 +386,7 @@ if not os.path.exists(output_file):
         writer.writerow(["run", "epsilon", "gamma", "round", "accuracy", "detection_accuracy"])
 
 # 実験パラメータ
-epsilon_values = [1]
+epsilon_values = [8]
 gamma_values = [0.01]
 num_runs = 1
 p_budget = 0.001
