@@ -238,16 +238,16 @@ class server():
             for i in range(len(deltas)):    
                 clip = (max(1, float(norms[i][key]/S_value)))   
                 clippedDelta = ((deltas[i][key])/clip)
-                #if any(i < m for m in malModel) :
-                #    noise = (np.random.normal((np.sqrt(2*gamma/30)*(sigma*S_value)), float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
-
-                #else: 
-                #    noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
                 if any(i < m for m in malModel) :
-                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/30), float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
-                
+                    noise = (np.random.normal((np.sqrt(2*gamma/30)*(sigma*S_value)), float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
+
                 else: 
-                    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
+                    noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
+                #if any(i < m for m in malModel) :
+                #    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/30), float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
+                
+                #else: 
+                #    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
                 clippedDelta = clippedDelta.cpu().numpy()
                 modelSum = clippedDelta + noise
                 sanitized_deltas[i][key] = torch.from_numpy(modelSum).float().to('cpu')
@@ -387,7 +387,7 @@ if not os.path.exists(output_file):
 
 # 実験パラメータ
 epsilon_values = [1,4,8]
-gamma_values = [0,0.01,0.02,0.03]
+gamma_values = [0.03]
 num_runs = 3
 p_budget = 0.001
 
