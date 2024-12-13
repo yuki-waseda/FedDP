@@ -365,7 +365,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 # デルタバジェットBとプライバシー予算εを指定
 p_budget = 0.001
 epsilon = 8
-gamma = 0.03
+gamma = 0.1
 serv = server(num_clients, p_budget,epsilon ,gamma)
 model = serv.server_exec(30)
 
