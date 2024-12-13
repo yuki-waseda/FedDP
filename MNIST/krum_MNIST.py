@@ -241,7 +241,7 @@ class server():
                 #    noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))      
 
                 if any(i < m for m in malModel) :
-                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/np.sqrt(30)), float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
+                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/30), float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
                 
                 else: 
                     noise = (np.random.normal(0, float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
