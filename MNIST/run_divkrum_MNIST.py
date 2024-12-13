@@ -234,12 +234,12 @@ class server():
                 S.append(norms[i][key])
             S_value = np.median(S)      
             wt = value
-
+            print(S_value)
             for i in range(len(deltas)):    
                 clip = (max(1, float(norms[i][key]/S_value)))   
                 clippedDelta = ((deltas[i][key])/clip)
                 if any(i < m for m in malModel) :
-                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma)/(1+S)/30), float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
+                    noise = (np.random.normal((np.sqrt(2*gamma)*(S_value)/30), float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
 
                 else: 
                     noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
