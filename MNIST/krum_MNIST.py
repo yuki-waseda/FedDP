@@ -364,7 +364,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
 p_budget = 0.001
-epsilon = 4
+epsilon = 1
 gamma = 0.03
 # 0.1, 0.03で100%検出
 serv = server(num_clients, p_budget,epsilon ,gamma)
