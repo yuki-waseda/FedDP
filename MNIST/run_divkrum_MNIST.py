@@ -239,7 +239,7 @@ class server():
                 clippedDelta = ((deltas[i][key])/clip)
                
                 if any(i < m for m in malModel) :
-                    noise = (np.random.normal((np.sqrt(2*gamma/30)*(sigma*S_value)), float((sigma)*(S_value)/np.sqrt(30)*0.6), size = deltas[i][key].shape))
+                    noise = (np.random.normal((np.sqrt(2*gamma/30)*(sigma*S_value)*0.6), float((sigma)*(S_value)/np.sqrt(30)*0.6), size = deltas[i][key].shape))
                 
                 else: 
                     noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)*0.6), size = deltas[i][key].shape)) 
