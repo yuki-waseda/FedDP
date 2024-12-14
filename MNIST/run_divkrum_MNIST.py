@@ -333,7 +333,7 @@ class server():
             #if self.p_budget < delta_spent:
             #    break
             if self.epsilon==1:
-                if 11 < i:
+                if 7 < i:
                     break
             if 20 < i:
                 break
@@ -387,7 +387,7 @@ if not os.path.exists(output_file):
 
 # 実験パラメータ
 epsilon_values = [1,4,8]
-gamma_values = [0.01]
+gamma_values = [0.005,0.0075,0.01]
 num_runs = 1
 p_budget = 0.001
 
