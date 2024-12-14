@@ -239,7 +239,7 @@ class server():
                 clip = (max(1, float(norms[i][key]/S_value)))   
                 clippedDelta = ((deltas[i][key])/clip)
                 if any(i < m for m in malModel) :
-                    noise = (np.random.normal((np.sqrt(2*gamma/30)*(sigma)*(S_value)), float((sigma**2)*(S_value**2)/np.sqrt(30)/4), size = deltas[i][key].shape))
+                    noise = (np.random.normal((np.sqrt(2*gamma/30)*(sigma)*(S_value)/np.sqrt(30)/4), float((sigma**2)*(S_value**2)/np.sqrt(30)/4), size = deltas[i][key].shape))
 
                 else: 
                     noise = (np.random.normal(0, float((sigma**2)*(S_value**2)/np.sqrt(30)/4), size = deltas[i][key].shape))
@@ -335,7 +335,7 @@ class server():
             if self.epsilon==1:
                 if 11 < i:
                     break
-            if 50 < i:
+            if 20 < i:
                 break
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
@@ -377,7 +377,7 @@ test_len = len(mnist_testset)
 valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=True)
 
 # 実行結果を保存するファイル名
-output_file = "revkrum_result.csv"
+output_file = "testrevkrum_result.csv"
 
 # CSVファイルが存在しない場合にヘッダーを追加
 if not os.path.exists(output_file):
@@ -386,8 +386,8 @@ if not os.path.exists(output_file):
         writer.writerow(["run", "epsilon", "gamma", "round", "accuracy", "detection_accuracy"])
 
 # 実験パラメータ
-epsilon_values = [1]
-gamma_values = [0]
+epsilon_values = [0,1,4,8]
+gamma_values = [0,0.01,0.02]
 num_runs = 1
 p_budget = 0.001
 
