@@ -234,7 +234,6 @@ class server():
                 S.append(norms[i][key])
             S_value = np.median(S)      
             wt = value
-            print(S_value)
             for i in range(len(deltas)):    
                 clip = (max(1, float(norms[i][key]/S_value)))   
                 clippedDelta = ((deltas[i][key])/clip)
