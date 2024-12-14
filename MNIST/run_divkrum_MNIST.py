@@ -335,7 +335,7 @@ class server():
             if self.epsilon==1:
                 if 7 < i:
                     break
-            if 20 < i:
+            if 31 < i:
                 break
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
