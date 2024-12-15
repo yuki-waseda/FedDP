@@ -390,7 +390,7 @@ if not os.path.exists(output_file):
 # 実験パラメータ
 # いい感じ♪
 epsilon_values = [1,4,8]
-gamma_values = [0, 0.0075, 0.05, 0.0025]
+gamma_values = [0, 0.006, 0.004, 0.002]
 num_runs = 1
 p_budget = 0.001
 
