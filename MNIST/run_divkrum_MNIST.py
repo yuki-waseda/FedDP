@@ -377,7 +377,9 @@ test_len = len(mnist_testset)
 valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=True)
 
 # 実行結果を保存するファイル名
-output_file = "testrevkrum_result.csv"
+
+#output_file = "testrevkrum_result.csv" こちらも可視化に利用可能
+output_file = "test2revkrum_result.csv"
 
 # CSVファイルが存在しない場合にヘッダーを追加
 if not os.path.exists(output_file):
@@ -388,7 +390,7 @@ if not os.path.exists(output_file):
 # 実験パラメータ
 # いい感じ♪
 epsilon_values = [1,4,8]
-gamma_values = [0.005,0.0075,0.01]
+gamma_values = [0, 0.0075, 0.05, 0.0025]
 num_runs = 1
 p_budget = 0.001
 
