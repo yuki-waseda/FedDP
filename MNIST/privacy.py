@@ -17,7 +17,6 @@ warnings.filterwarnings('ignore')
 import matplotlib.pyplot as plt
 import random
 
-epsilon = [1,2,4,8]
 p_budget = 0.001
 mt = 30
 clients = 100
@@ -28,6 +27,7 @@ for epsilon in [0.5,1,2,4,8]:
     sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon  #MNISTはこれでいける
     #sigmat = 1.12
     print('eps: ',epsilon)
+    print('sigmat: ',sigmat)
     i=1
     while(1):
         if (i>100):
