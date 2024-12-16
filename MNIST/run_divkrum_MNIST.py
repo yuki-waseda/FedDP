@@ -162,7 +162,7 @@ class server():
         #sigmat = 1.12
         self.model = t_model()
         #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
-        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon+1.12
+        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         #sigmat =  np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         self.sigmat = sigmat   
         self.n_clients = number_clients
