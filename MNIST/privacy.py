@@ -25,7 +25,7 @@ clients = 100
 for epsilon in [0.5,1,2,4,8]:
     
     #sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon +1.12 
-    sigmat = 1
+    sigmat = 1.12
     print('eps: ',epsilon)
     print('eps: ',sigmat)
     i=1
