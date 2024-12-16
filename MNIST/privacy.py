@@ -29,6 +29,7 @@ for epsilon in [1,2,8,4]:
     print('eps: ',sigmat)
     i=1
     while(1):
+        print(i)
         if (i>40):
             break
         orders = ( [1.25, 1.5, 1.75, 2., 2.25, 2.5, 3., 3.5, 4., 4.5] +

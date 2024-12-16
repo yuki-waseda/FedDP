@@ -150,9 +150,7 @@ def noiseGen(mu, sigma, suma):
     samples = np.array(metropolis_sampler(p, u*v))
 #     ranSample = random.sample(samples,u*v)
 #     ranSampleArr = np.array(ranSample)
-    print(samples.shape)
-    print(len(samples))
-    print(samples)
+    
     noise = samples.reshape((u,v))
     return noise
 #%%
@@ -323,6 +321,18 @@ class server():
         detection_accuracyList = []
         while(1):
 #             clear_output()
+            if  self.epsilon ==1:
+                if i>14:
+                    break
+            if  self.epsilon ==2:
+                if i>14:
+                    break
+            if  self.epsilon ==4:
+                if i>19:
+                    break
+            if  self.epsilon ==8:
+                if i>33:
+                    break
             print('Comunication round: ', i)
             test_loss = self.eval_acc()         
             testLossList.append(test_loss) 
@@ -344,8 +354,6 @@ class server():
             new_state_dict, detection_accuracy = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict(),self.gamma)
             detection_accuracyList.append(detection_accuracy) 
             self.model.load_state_dict(new_state_dict)
-            if self.p_budget < delta_spent:
-                break
             i+=1
         return self.model,testLossList,detection_accuracyList
             
@@ -377,7 +385,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 # 実行結果を保存するファイル名
 
 #output_file = "testrevkrum_result.csv" こちらも可視化に利用可能
-output_file = "test3revkrum_result.csv"
+output_file = "mainrevkrum_result.csv"
 
 # CSVファイルが存在しない場合にヘッダーを追加
 if not os.path.exists(output_file):
@@ -387,9 +395,9 @@ if not os.path.exists(output_file):
 
 # 実験パラメータ
 # いい感じ♪
-epsilon_values = [1,4,8]
-gamma_values = [0, 0.006, 0.004, 0.002]
-num_runs = 1
+epsilon_values = [1,2,4,8]
+gamma_values = [0, 0.002, 0.004, 0.006]
+num_runs = 3
 p_budget = 0.001
 
 # 実験の実行

@@ -150,9 +150,7 @@ def noiseGen(mu, sigma, suma):
     samples = np.array(metropolis_sampler(p, u*v))
 #     ranSample = random.sample(samples,u*v)
 #     ranSampleArr = np.array(ranSample)
-    print(samples.shape)
-    print(len(samples))
-    print(samples)
+
     noise = samples.reshape((u,v))
     return noise
 #%%
@@ -164,7 +162,7 @@ class server():
         #sigmat = 1.12
         self.model = t_model()
         #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
-        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon +1.12
+        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon 
         #sigmat =  np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         self.sigmat = sigmat   
         self.n_clients = number_clients
@@ -244,10 +242,10 @@ class server():
                 #else: 
                 #    noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)), size = deltas[i][key].shape))
                 if any(i < m for m in malModel) :
-                    noise = (np.random.normal((np.sqrt(2*gamma)*(sigma*S_value)/30), float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
+                    noise = (np.random.normal((np.sqrt(2*gamma/30)*(sigma*S_value)*0.6), float((sigma)*(S_value)/np.sqrt(30)*0.6), size = deltas[i][key].shape))
                 
                 else: 
-                    noise = (np.random.normal(0, float((sigma**2)*(S_value**2)/np.sqrt(30)), size = deltas[i][key].shape))
+                    noise = (np.random.normal(0, float((sigma)*(S_value)/np.sqrt(30)*0.6), size = deltas[i][key].shape))
                 clippedDelta = clippedDelta.cpu().numpy()
                 modelSum = clippedDelta + noise
                 sanitized_deltas[i][key] = torch.from_numpy(modelSum).float().to('cpu')
@@ -339,6 +337,18 @@ class server():
         testLossList = []
         detection_accuracyList = []
         while(1):
+            if  self.epsilon ==1:
+                if i>14:
+                    break
+            if  self.epsilon ==2:
+                if i>14:
+                    break
+            if  self.epsilon ==4:
+                if i>19:
+                    break
+            if  self.epsilon ==8:
+                if i>33:
+                    break
 #             clear_output()
             print('Comunication round: ', i)
             test_loss = self.eval_acc()         
@@ -350,11 +360,6 @@ class server():
             
             #if self.p_budget < delta_spent:
             #    break
-            if self.epsilon==1:
-                if 11 < i:
-                    break
-            if 50 < i:
-                break
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
             norms = []
@@ -395,7 +400,7 @@ test_len = len(mnist_testset)
 valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=True)
 
 # 実行結果を保存するファイル名
-output_file = "revkmeans_result.csv"
+output_file = "mainkmeans_result.csv"
 
 # CSVファイルが存在しない場合にヘッダーを追加
 if not os.path.exists(output_file):
@@ -404,8 +409,8 @@ if not os.path.exists(output_file):
         writer.writerow(["run", "epsilon", "gamma", "round", "accuracy", "detection_accuracy"])
 
 # 実験パラメータ
-epsilon_values = [1,4,8]
-gamma_values = [0,0.01,0.02,0.03]
+epsilon_values = [1,2,4,8]
+gamma_values = [0, 0.002, 0.004, 0.006]
 num_runs = 3
 p_budget = 0.001
 
