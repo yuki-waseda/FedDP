@@ -53,7 +53,7 @@ def get_samples(num_clients):
         samples.append(t_sampler)
         init = split
         split = split+split_ini
-    return samples, split
+    return samples, split_ini
       
 
 #%%
