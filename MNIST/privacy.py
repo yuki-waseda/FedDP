@@ -22,7 +22,7 @@ mt = 30
 clients = 100
 
 
-for epsilon in [8,4,1]:
+for epsilon in [2,8,4,1]:
     
     sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon +1.12 
     print('eps: ',epsilon)
@@ -33,7 +33,7 @@ for epsilon in [8,4,1]:
             break
         orders = ( [1.25, 1.5, 1.75, 2., 2.25, 2.5, 3., 3.5, 4., 4.5] +
                     list(range(5, 64)) + [128, 256, 512])
-        rdp = compute_rdp(mt/clients, sigmat*0.725, i, orders)
+        rdp = compute_rdp(mt/clients, sigmat*0.725, i, orders) #MNISTはsigmat*0.725です
         _,delta_spent, opt_order = get_privacy_spent(orders, rdp, target_eps=epsilon)
         
         print('Round: ',i)
