@@ -45,7 +45,6 @@ class t_model(nn.Module):
 def get_samples(num_clients):
     tam = len(mnist_trainset)
     split= int(tam/num_clients)
-    print(split)
     split_ini = split
     indices = list(range(tam))
     init=0
@@ -56,7 +55,7 @@ def get_samples(num_clients):
         samples.append(t_sampler)
         init = split
         split = split+split_ini
-    return samples 
+    return samples, split
       
 
 #%%
@@ -171,6 +170,7 @@ class server():
         self.n_clients = number_clients
         self.gamma = gamma
         self.samples = get_samples(self.n_clients)
+
         self.clients = list()
         for i in range(number_clients):
             loader = torch.utils.data.DataLoader(mnist_trainset, batch_size=32, sampler=self.samples[i])
