@@ -24,10 +24,10 @@ clients = 100
 
 for epsilon in [0.5,1,2,4,8]:
     
-    sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon  #MNISTはこれでいける
+    sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon+1.12  #MNISTはこれでいける
     #sigmat = 1.12
     print('eps: ',epsilon)
-    print('sigmat: ',sigmat)
+    print('eps: ',sigmat)
     i=1
     while(1):
         if (i>100):
