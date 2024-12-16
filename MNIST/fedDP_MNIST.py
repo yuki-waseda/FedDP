@@ -53,7 +53,7 @@ def get_samples(num_clients):
         samples.append(t_sampler)
         init = split
         split = split+split_ini
-    return samples, split_ini
+    return samples
       
 
 #%%
@@ -269,6 +269,9 @@ class server():
             print('Comunication round: ', i)
             self.eval_acc()         
             rdp = compute_rdp(float(mt/len(self.clients)), self.sigmat, i, self.orders)
+            print(float(mt/len(self.clients)))
+            print( self.sigmat)
+
             _,delta_spent, opt_order = get_privacy_spent(self.orders, rdp, target_eps=self.epsilon)
             print('Delta spent: ', delta_spent)
             print('Delta budget: ', self.p_budget)  
@@ -316,7 +319,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 #%%
 #We're creating the Server class. A priv_budget of 0.001 (the max delta) and a Epsilon of 8
 # デルタバジェットBとプライバシー予算εを指定
-serv = server(num_clients, 0.001, 8)
+serv = server(num_clients, 0.001, 1)
 model = serv.server_exec(30)
 
 #%%
