@@ -45,6 +45,7 @@ class t_model(nn.Module):
 def get_samples(num_clients):
     tam = len(mnist_trainset)
     split= int(tam/num_clients)
+    print(split)
     split_ini = split
     indices = list(range(tam))
     init=0
