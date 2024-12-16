@@ -165,8 +165,8 @@ class server():
         sigmat = 1.12 + np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         self.sigmat = sigmat   
         self.n_clients = number_clients
-        self.samples, split = get_samples(self.n_clients)
-        print('split:' , split)
+        self.samples  = get_samples(self.n_clients)
+
         self.clients = list()
         for i in range(number_clients):
             loader = torch.utils.data.DataLoader(mnist_trainset, batch_size=32, sampler=self.samples[i])
