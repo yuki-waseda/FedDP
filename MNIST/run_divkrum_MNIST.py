@@ -377,7 +377,7 @@ valloader = torch.utils.data.DataLoader(mnist_testset, batch_size=64, shuffle=Tr
 # 実行結果を保存するファイル名
 
 #output_file = "testrevkrum_result.csv" こちらも可視化に利用可能
-output_file = "test2revkrum_result.csv"
+output_file = "test3revkrum_result.csv"
 
 # CSVファイルが存在しない場合にヘッダーを追加
 if not os.path.exists(output_file):
