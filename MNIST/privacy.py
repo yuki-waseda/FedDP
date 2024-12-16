@@ -25,6 +25,7 @@ i=1
 
 for epsilon in [1,2,4,8]:
     sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon  +1.12
+    print('eps: ',epsilon)
     while(1):
         if (i>100):
             break
@@ -32,6 +33,7 @@ for epsilon in [1,2,4,8]:
                     list(range(5, 64)) + [128, 256, 512])
         rdp = compute_rdp(float(mt/clients), sigmat, i, orders)
         _,delta_spent, opt_order = get_privacy_spent(orders, rdp, target_eps=epsilon)
+        
         print('Round: ',i)
         print('Delta spent: ', delta_spent)
         print('Delta budget: ', p_budget)  
