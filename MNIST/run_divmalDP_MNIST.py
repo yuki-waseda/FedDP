@@ -361,7 +361,7 @@ if not os.path.exists(output_file):
 # 実験パラメータ
 epsilon_values = [1,2,4,8]
 gamma_values = [0, 0.002, 0.004, 0.006]
-num_runs = 3
+num_runs = 5
 p_budget = 0.001
 
 # 実験の実行
