@@ -164,7 +164,7 @@ class server():
         #sigmat = 1.12
         self.model = t_model()
         #sigmat = 0.55 * np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
-        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon +1.12
+        sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         #sigmat =  np.sqrt(2 * np.log(1.25 / p_budget)) * 1 / epsilon
         self.sigmat = sigmat   
         self.n_clients = number_clients
@@ -333,11 +333,6 @@ class server():
             
             #if self.p_budget < delta_spent:
             #    break
-            if self.epsilon==1:
-                if 7 < i:
-                    break
-            if 31 < i:
-                break
             Zt = np.random.choice(self.clients, mt)      
             deltas = []
             norms = []
@@ -349,6 +344,8 @@ class server():
             new_state_dict, detection_accuracy = self.sanitaze(mt, deltas, norms, self.sigmat, self.model.state_dict(),self.gamma)
             detection_accuracyList.append(detection_accuracy) 
             self.model.load_state_dict(new_state_dict)
+            if self.p_budget < delta_spent:
+                break
             i+=1
         return self.model,testLossList,detection_accuracyList
             
