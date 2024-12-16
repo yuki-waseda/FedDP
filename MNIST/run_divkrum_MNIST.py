@@ -44,6 +44,7 @@ class t_model(nn.Module):
 #Return the samples that each client is going to have as a private training data set. This is a not overlapping set
 def get_samples(num_clients):
     tam = len(mnist_trainset)
+    print(tam)
     split= int(tam/num_clients)
     split_ini = split
     indices = list(range(tam))
