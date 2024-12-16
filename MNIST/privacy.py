@@ -22,14 +22,14 @@ mt = 30
 clients = 100
 
 
-for epsilon in [2,8,4,1]:
+for epsilon in [1,2,8,4]:
     
     sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon +1.12 
     print('eps: ',epsilon)
     print('eps: ',sigmat)
     i=1
     while(1):
-        if (i>100):
+        if (i>40):
             break
         orders = ( [1.25, 1.5, 1.75, 2., 2.25, 2.5, 3., 3.5, 4., 4.5] +
                     list(range(5, 64)) + [128, 256, 512])
