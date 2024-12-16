@@ -32,6 +32,7 @@ for epsilon in [1,2,4,8]:
                     list(range(5, 64)) + [128, 256, 512])
         rdp = compute_rdp(float(mt/clients), sigmat, i, orders)
         _,delta_spent, opt_order = get_privacy_spent(orders, rdp, target_eps=epsilon)
+        print('Round: ',i)
         print('Delta spent: ', delta_spent)
         print('Delta budget: ', p_budget)  
         i+=1        
