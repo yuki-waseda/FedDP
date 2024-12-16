@@ -21,11 +21,12 @@ epsilon = [1,2,4,8]
 p_budget = 0.001
 mt = 30
 clients = 100
-i=1
+
 
 for epsilon in [1,2,4,8]:
     sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon  +1.12
     print('eps: ',epsilon)
+    i=1
     while(1):
         if (i>100):
             break
