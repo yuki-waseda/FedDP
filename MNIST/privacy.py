@@ -23,10 +23,9 @@ mt = 30
 clients = 100
 
 
-for epsilon in [1,2,4,8]:
+for epsilon in [0.5,1,2,4,8]:
     
-    #sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon  #MNISTはこれでいける
-    sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon +1.12
+    sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon  #MNISTはこれでいける
     #sigmat = 1.12
     print('eps: ',epsilon)
     i=1
