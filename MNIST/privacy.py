@@ -24,7 +24,7 @@ clients = 100
 
 for epsilon in [0.5,1,2,4,8]:
     
-    sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon+1.12  
+    sigmat = np.sqrt(2 * np.log(1.25 / p_budget)) * 1 /epsilon 
     #sigmat = 1.12
     print('eps: ',epsilon)
     print('eps: ',sigmat)
@@ -34,7 +34,7 @@ for epsilon in [0.5,1,2,4,8]:
             break
         orders = ( [1.25, 1.5, 1.75, 2., 2.25, 2.5, 3., 3.5, 4., 4.5] +
                     list(range(5, 64)) + [128, 256, 512])
-        rdp = compute_rdp(mt/clients*2.7335, sigmat, i, orders)
+        rdp = compute_rdp(mt/clients, sigmat, i, orders)
         _,delta_spent, opt_order = get_privacy_spent(orders, rdp, target_eps=epsilon)
         
         print('Round: ',i)
